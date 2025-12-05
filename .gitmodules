@@ -1,0 +1,12 @@
+[submodule "libraries/esp-knx-common"]
+	path = libraries/esp-knx-common
+	url = https://github.com/mwerski/esp-knx-common.git
+[submodule "libraries/esp-knx-led"]
+	path = libraries/esp-knx-led
+	url = https://github.com/mwerski/esp-knx-led.git
+[submodule "libraries/esp-knx-webserver"]
+	path = libraries/esp-knx-webserver
+	url = https://github.com/mwerski/esp-knx-webserver.git
+[submodule "libraries/knx"]
+	path = libraries/knx
+	url = https://github.com/mwerski/knx.git

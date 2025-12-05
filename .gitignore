@@ -1,0 +1,13 @@
+# PlatformIO/Build-Kram
+**/.pio/
+**/.vscode/.browse.*
+**/.vscode/.cortex-debug.*
+**/.vscode/c_cpp_properties.json
+**/.vscode/launch.json
+
+# Sonstiges
+.DS_Store
+*.bin
+*.elf
+*.hex
+credentials.h

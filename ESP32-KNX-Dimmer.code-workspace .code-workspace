@@ -1,0 +1,35 @@
+{
+  "folders": [
+		{
+			"name": "knx-led-dimmable",
+			"path": "knx-led-dimmable"
+		},
+		{
+			"name": "knx-led-rgb",
+			"path": "knx-led-rgb"
+		},
+		{
+			"name": "knx-led-rgbcct",
+			"path": "knx-led-rgbcct"
+		},
+		{
+			"name": "knx-led-rgbw",
+			"path": "knx-led-rgbw"
+		},
+		{
+			"name": "knx-led-tunable",
+			"path": "knx-led-tunable"
+		},
+		{
+			"name": "knx-led-tunable-dimmable",
+			"path": "knx-led-tunable-dimmable"
+		},
+		{
+			"name": "libraries",
+			"path": "libraries"
+		}
+	],
+	"settings": {
+		"C_Cpp.default.configurationProvider": "platformio.platformio-ide"
+	}
+}
