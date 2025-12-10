@@ -73,10 +73,14 @@ void setup()
     setFirmwareVersion(MAIN_OpenKnxId, MAIN_ApplicationNumber, MAIN_ApplicationVersion);
 
     // Red status led on at start
+		#ifdef STAT_LED_GN
     pinMode(STAT_LED_GN, OUTPUT);
-    pinMode(STAT_LED_RD, OUTPUT);
     digitalWrite(STAT_LED_GN, STAT_LED_OFF);
+		#endif
+		#ifdef STAT_LED_RD
+    pinMode(STAT_LED_RD, OUTPUT);
     digitalWrite(STAT_LED_RD, STAT_LED_ON);
+		#endif
 
     // read adress table, association table, groupobject table and parameters from eeprom
     knx.readMemory();
@@ -107,8 +111,12 @@ void setup()
     Serial.println(getKnxPhysAddr());
 
     // Red status led off and green led on after setup
+		#ifdef STAT_LED_GN
     digitalWrite(STAT_LED_GN, STAT_LED_ON);
+		#endif
+		#ifdef STAT_LED_RD
     digitalWrite(STAT_LED_RD, STAT_LED_OFF);
+		#endif
 
     #if defined(ESP8266) || defined(ESP32)
     WiFi.persistent(false); // Solve possible wifi init errors
@@ -144,8 +152,12 @@ void setup()
     knxWebServ.startWeb(WWW_USER, WWW_PASS);
 
     // Both status LEDs off after WIFI connect
+		#ifdef STAT_LED_GN
     digitalWrite(STAT_LED_GN, STAT_LED_OFF);
+		#endif
+		#ifdef STAT_LED_RD
     digitalWrite(STAT_LED_RD, STAT_LED_OFF);
+		#endif
 }
 
 void loop()
