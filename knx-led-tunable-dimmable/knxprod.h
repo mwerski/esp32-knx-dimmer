@@ -73,18 +73,6 @@
 #define APP_GPIO_PWM5_Mask	0x003F
 // Offset: 43, Size: 6 Bit, Text: GPIO Kanal 5
 #define ParamAPP_GPIO_PWM5 ((uint32_t)((knx.paramByte(APP_GPIO_PWM5) >> APP_GPIO_PWM5_Shift) & APP_GPIO_PWM5_Mask))
-#define APP_CH2active		0x0026
-// Offset: 38, BitOffset: 4, Size: 1 Bit, Text: Kanal 2 aktiv
-#define ParamAPP_CH2active knx.paramBit(APP_CH2active, 4)
-#define APP_CH3active		0x0026
-// Offset: 38, BitOffset: 5, Size: 1 Bit, Text: Kanal 3 aktiv
-#define ParamAPP_CH3active knx.paramBit(APP_CH3active, 5)
-#define APP_CH4active		0x0026
-// Offset: 38, BitOffset: 6, Size: 1 Bit, Text: Kanal 4 aktiv
-#define ParamAPP_CH4active knx.paramBit(APP_CH4active, 6)
-#define APP_CH5active		0x0026
-// Offset: 38, BitOffset: 7, Size: 1 Bit, Text: Kanal 5 aktiv
-#define ParamAPP_CH5active knx.paramBit(APP_CH5active, 7)
 //!< Number: 0, Text: Zentral, Function: Tag/Nacht
 #define APP_KoGeneralDayNight 0
 #define KoAPP_GeneralDayNight knx.getGroupObject(APP_KoGeneralDayNight)
