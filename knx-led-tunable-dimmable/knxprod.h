@@ -8,6 +8,13 @@
                                             (time & 0x3FFF) * 3600000 ) : 0 )
 #define PT_OnOff_Aus 0
 #define PT_OnOff_Ein 1
+#define PT_ChannelModes_RGBCCT 0
+#define PT_ChannelModes_RGBW_D 1
+#define PT_ChannelModes_RGB_CCT 2
+#define PT_ChannelModes_RGB_D_D 3
+#define PT_ChannelModes_CCT_CCT_D 4
+#define PT_ChannelModes_CCT_D_D_D 5
+#define PT_ChannelModes_D_D_D_D_D 6
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00

@@ -1847,7 +1847,7 @@
         "TranslateEnums": true,
         "SizeInBit": 3,
         "OtherValue": true,
-        "ExportInHeader": false,
+        "ExportInHeader": true,
         "UIHint": "",
         "BaggageUId": -1,
         "Min": "0",
@@ -1878,7 +1878,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "RGBW+D",
+            "Name": "RGBW_D",
             "Value": 1,
             "UseIcon": false,
             "IconId": -1,
@@ -1898,7 +1898,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "RGB+CCT",
+            "Name": "RGB_CCT",
             "Value": 2,
             "UseIcon": false,
             "IconId": -1,
@@ -1918,7 +1918,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "RGB+D+D",
+            "Name": "RGB_D_D",
             "Value": 3,
             "UseIcon": false,
             "IconId": -1,
@@ -1938,7 +1938,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "CCT+CCT+D",
+            "Name": "CCT_CCT_D",
             "Value": 4,
             "UseIcon": false,
             "IconId": -1,
@@ -1958,7 +1958,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "CCT+D+D+D",
+            "Name": "CCT_D_D_D",
             "Value": 5,
             "UseIcon": false,
             "IconId": -1,
@@ -1978,7 +1978,7 @@
           },
           {
             "$type": "Kaenx.Creator.Models.ParameterTypeEnum, Kaenx.Creator.Share",
-            "Name": "D+D+D+D+D",
+            "Name": "D_D_D_D_D",
             "Value": 6,
             "UseIcon": false,
             "IconId": -1,
@@ -7870,7 +7870,7 @@
           {
             "$type": "Kaenx.Creator.Models.Argument, Kaenx.Creator.Share",
             "UId": 2,
-            "Id": -1,
+            "Id": 2,
             "Allocates": 107,
             "Name": "argComs",
             "Type": 1
