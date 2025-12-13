@@ -89,15 +89,15 @@
 //---------------------Modules----------------------------
 
 //-----Module specific starts
-#define RGBCCT_ParamBlockOffset 44
+#define RGBCCT_ParamBlockOffset 87
 #define RGBCCT_ParamBlockSize 13
-#define RGBW_ParamBlockOffset 57
+#define RGBW_ParamBlockOffset 100
 #define RGBW_ParamBlockSize 13
-#define DIM_ParamBlockOffset 70
+#define DIM_ParamBlockOffset 113
 #define DIM_ParamBlockSize 4
-#define RGB_ParamBlockOffset 74
+#define RGB_ParamBlockOffset 117
 #define RGB_ParamBlockSize 13
-#define CCT_ParamBlockOffset 87
+#define CCT_ParamBlockOffset 130
 #define CCT_ParamBlockSize 10
 #define RGBCCT_KoOffset 20
 #define RGBCCT_KoBlockSize 27
