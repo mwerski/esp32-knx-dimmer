@@ -287,6 +287,6 @@
 #define APP_KoCH5_Status 200
 #define KoAPP_CH5_Status knx.getGroupObject(APP_KoCH5_Status)
 //!< Number: 201, Text: Kanal 5 (Status), Function: Helligkeit
-#define APP_KoCH4_StatusBrightness 201
-#define KoAPP_CH4_StatusBrightness knx.getGroupObject(APP_KoCH4_StatusBrightness)
+#define APP_KoCH5_StatusBrightness 201
+#define KoAPP_CH5_StatusBrightness knx.getGroupObject(APP_KoCH5_StatusBrightness)
 
