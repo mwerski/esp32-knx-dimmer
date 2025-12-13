@@ -203,8 +203,8 @@
 #define APP_KoCH1_Status 40
 #define KoAPP_CH1_Status knx.getGroupObject(APP_KoCH1_Status)
 //!< Number: 41, Text: Kanal 1 (Status), Function: Helligkeit
-#define APP_KoCH1_Brightness 41
-#define KoAPP_CH1_Brightness knx.getGroupObject(APP_KoCH1_Brightness)
+#define APP_KoCH1_StatusBrightness 41
+#define KoAPP_CH1_StatusBrightness knx.getGroupObject(APP_KoCH1_StatusBrightness)
 //!< Number: 42, Text: Kanal 1 (Status), Function: Farbtemperatur
 #define APP_KoCH1_StatusColortemp 42
 #define KoAPP_CH1_StatusColortemp knx.getGroupObject(APP_KoCH1_StatusColortemp)
@@ -239,8 +239,8 @@
 #define APP_KoCH2_Status 80
 #define KoAPP_CH2_Status knx.getGroupObject(APP_KoCH2_Status)
 //!< Number: 81, Text: Kanal 2 (Status), Function: Helligkeit
-#define APP_KoCH2_Brightness 81
-#define KoAPP_CH2_Brightness knx.getGroupObject(APP_KoCH2_Brightness)
+#define APP_KoCH2_StatusBrightness 81
+#define KoAPP_CH2_StatusBrightness knx.getGroupObject(APP_KoCH2_StatusBrightness)
 //!< Number: 82, Text: Kanal 2 (Status), Function: Farbtemperatur
 #define APP_KoCH2_StatusColortemp 82
 #define KoAPP_CH2_StatusColortemp knx.getGroupObject(APP_KoCH2_StatusColortemp)
@@ -257,8 +257,8 @@
 #define APP_KoCH3_Status 120
 #define KoAPP_CH3_Status knx.getGroupObject(APP_KoCH3_Status)
 //!< Number: 121, Text: Kanal 3 (Status), Function: Helligkeit
-#define APP_KoCH3_Brightness 121
-#define KoAPP_CH3_Brightness knx.getGroupObject(APP_KoCH3_Brightness)
+#define APP_KoCH3_StatusBrightness 121
+#define KoAPP_CH3_StatusBrightness knx.getGroupObject(APP_KoCH3_StatusBrightness)
 //!< Number: 140, Text: Kanal 4, Function: Schalten
 #define APP_KoCH4_Schalten 140
 #define KoAPP_CH4_Schalten knx.getGroupObject(APP_KoCH4_Schalten)
@@ -272,8 +272,8 @@
 #define APP_KoCH4_Status 160
 #define KoAPP_CH4_Status knx.getGroupObject(APP_KoCH4_Status)
 //!< Number: 161, Text: Kanal 4 (Status), Function: Helligkeit
-#define APP_KoCH4_Brightness 161
-#define KoAPP_CH4_Brightness knx.getGroupObject(APP_KoCH4_Brightness)
+#define APP_KoCH4_StatusBrightness 161
+#define KoAPP_CH4_StatusBrightness knx.getGroupObject(APP_KoCH4_StatusBrightness)
 //!< Number: 180, Text: Kanal 5, Function: Schalten
 #define APP_KoCH5_Schalten 180
 #define KoAPP_CH5_Schalten knx.getGroupObject(APP_KoCH5_Schalten)
@@ -287,6 +287,6 @@
 #define APP_KoCH5_Status 200
 #define KoAPP_CH5_Status knx.getGroupObject(APP_KoCH5_Status)
 //!< Number: 201, Text: Kanal 5 (Status), Function: Helligkeit
-#define APP_KoCH5_Brightness 201
-#define KoAPP_CH5_Brightness knx.getGroupObject(APP_KoCH5_Brightness)
+#define APP_KoCH4_StatusBrightness 201
+#define KoAPP_CH4_StatusBrightness knx.getGroupObject(APP_KoCH4_StatusBrightness)
 
