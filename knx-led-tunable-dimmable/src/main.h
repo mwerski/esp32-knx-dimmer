@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <knx.h>
-#include <knxprod.h>
+#include "../knxprod.h"
 #include "settings.h"
 #include "credentials.h"
 #include <esp-knx-common.h>
@@ -24,12 +24,27 @@
 
 bool knxConfigOk = false;
 bool initSent = false;
-KnxLed Light = KnxLed();
+KnxLed Light1 = KnxLed();
+KnxLed Light2 = KnxLed();
+KnxLed Light3 = KnxLed();
+KnxLed Light4 = KnxLed();
+KnxLed Light5 = KnxLed();
 KnxWebserver knxWebServ = KnxWebserver();
 void setup();
 void loop();
 
 void knxCallback(GroupObject &go);
-void statusCallback(bool state);
-void responseBrightnessCallback(uint8_t value);
-void responseTemperatureCallback(uint16_t value);
+void statusCallback_L1(bool state);
+void statusCallback_L2(bool state);
+void statusCallback_L3(bool state);
+void statusCallback_L4(bool state);
+void statusCallback_L5(bool state);
+void responseBrightnessCallback_L1(uint8_t value);
+void responseBrightnessCallback_L2(uint8_t value);
+void responseBrightnessCallback_L3(uint8_t value);
+void responseBrightnessCallback_L4(uint8_t value);
+void responseBrightnessCallback_L5(uint8_t value);
+void responseTemperatureCallback_L1(uint16_t value);
+void responseTemperatureCallback_L2(uint16_t value);
+void responseColorHsvCallback_L1(hsv_t value);
+void responseColorRgbCallback_L1(rgb_t value);
