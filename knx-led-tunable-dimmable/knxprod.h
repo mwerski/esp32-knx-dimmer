@@ -24,10 +24,10 @@
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
-#define MAIN_ApplicationVersion 0x02
+#define MAIN_ApplicationVersion 0x01
 #define MAIN_OrderNumber "DOM-WLE-ACLE"
-#define MAIN_ParameterSize 184
-#define MAIN_MaxKoNumber 1
+#define MAIN_ParameterSize 74
+#define MAIN_MaxKoNumber 201
 
 
 #define APP_StartUpDelay		0x0000
@@ -79,486 +79,214 @@
 #define APP_GPIO_PWM5_Mask	0x003F
 // Offset: 43, Size: 6 Bit, Text: GPIO Kanal 5
 #define ParamAPP_GPIO_PWM5 ((uint32_t)((knx.paramByte(APP_GPIO_PWM5) >> APP_GPIO_PWM5_Shift) & APP_GPIO_PWM5_Mask))
+#define APP_CH1_Active		0x0026
+// Offset: 38, BitOffset: 4, Size: 1 Bit, Text: Kanal 1 aktiv
+#define ParamAPP_CH1_Active knx.paramBit(APP_CH1_Active, 4)
+#define APP_CH1_DimSpeed		0x002C
+// Offset: 44, Size: 8 Bit (1 Byte), Text: Kanal 1 Dimmgeschwindigkeit
+#define ParamAPP_CH1_DimSpeed ((uint32_t)((knx.paramByte(APP_CH1_DimSpeed))))
+#define APP_CH1_BrightnessDay		0x002D
+// Offset: 45, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Tag
+#define ParamAPP_CH1_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH1_BrightnessDay))))
+#define APP_CH1_BrightnessNight		0x002E
+// Offset: 46, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Nacht
+#define ParamAPP_CH1_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH1_BrightnessNight))))
+#define APP_CH1_DefaultColorTemp		0x002F
+// Offset: 47, Size: 16 Bit (2 Byte), Text: Kanal 1 Einschaltfarbtemperatur
+#define ParamAPP_CH1_DefaultColorTemp ((uint32_t)((knx.paramWord(APP_CH1_DefaultColorTemp))))
+#define APP_CH1_MinColorTemp		0x0031
+// Offset: 49, Size: 16 Bit (2 Byte), Text: Kanal 1 Minimale Farbtemperatur
+#define ParamAPP_CH1_MinColorTemp ((uint32_t)((knx.paramWord(APP_CH1_MinColorTemp))))
+#define APP_CH1_MaxColorTemp		0x0033
+// Offset: 51, Size: 16 Bit (2 Byte), Text: Kanal 1 Maximale Farbtemperatur
+#define ParamAPP_CH1_MaxColorTemp ((uint32_t)((knx.paramWord(APP_CH1_MaxColorTemp))))
+#define APP_CH1_DefaultColor		0x0035
+// Offset: 53, Size: 24 Bit (3 Byte), Text: Kanal 1 Einschaltfarbe
+#define ParamAPP_CH1_DefaultColor knx.paramData(APP_CH1_DefaultColor)
+#define APP_CH2_Active		0x0026
+// Offset: 38, BitOffset: 5, Size: 1 Bit, Text: Kanal 2 aktiv
+#define ParamAPP_CH2_Active knx.paramBit(APP_CH2_Active, 5)
+#define APP_CH2_DimSpeed		0x0038
+// Offset: 56, Size: 8 Bit (1 Byte), Text: Kanal 2 Dimmgeschwindigkeit
+#define ParamAPP_CH2_DimSpeed ((uint32_t)((knx.paramByte(APP_CH2_DimSpeed))))
+#define APP_CH2_BrightnessDay		0x0039
+// Offset: 57, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Tag
+#define ParamAPP_CH2_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH2_BrightnessDay))))
+#define APP_CH2_BrightnessNight		0x003A
+// Offset: 58, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Nacht
+#define ParamAPP_CH2_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH2_BrightnessNight))))
+#define APP_CH2_DefaultColorTemp		0x003B
+// Offset: 59, Size: 16 Bit (2 Byte), Text: Kanal 2 Einschaltfarbtemperatur
+#define ParamAPP_CH2_DefaultColorTemp ((uint32_t)((knx.paramWord(APP_CH2_DefaultColorTemp))))
+#define APP_CH2_MinColorTemp		0x003D
+// Offset: 61, Size: 16 Bit (2 Byte), Text: Kanal 2 Minimale Farbtemperatur
+#define ParamAPP_CH2_MinColorTemp ((uint32_t)((knx.paramWord(APP_CH2_MinColorTemp))))
+#define APP_CH2_MaxColorTemp		0x003F
+// Offset: 63, Size: 16 Bit (2 Byte), Text: Kanal 2 Maximale Farbtemperatur
+#define ParamAPP_CH2_MaxColorTemp ((uint32_t)((knx.paramWord(APP_CH2_MaxColorTemp))))
+#define APP_CH3_Active		0x0026
+// Offset: 38, BitOffset: 6, Size: 1 Bit, Text: Kanal 3 aktiv
+#define ParamAPP_CH3_Active knx.paramBit(APP_CH3_Active, 6)
+#define APP_CH3_DimSpeed		0x0041
+// Offset: 65, Size: 8 Bit (1 Byte), Text: Kanal 3 Dimmgeschwindigkeit
+#define ParamAPP_CH3_DimSpeed ((uint32_t)((knx.paramByte(APP_CH3_DimSpeed))))
+#define APP_CH3_BrightnessDay		0x0042
+// Offset: 66, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Tag
+#define ParamAPP_CH3_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH3_BrightnessDay))))
+#define APP_CH3_BrightnessNight		0x0043
+// Offset: 67, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Nacht
+#define ParamAPP_CH3_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH3_BrightnessNight))))
+#define APP_CH4_Active		0x0026
+// Offset: 38, BitOffset: 7, Size: 1 Bit, Text: Kanal 4 aktiv
+#define ParamAPP_CH4_Active knx.paramBit(APP_CH4_Active, 7)
+#define APP_CH4_DimSpeed		0x0044
+// Offset: 68, Size: 8 Bit (1 Byte), Text: Kanal 4 Dimmgeschwindigkeit
+#define ParamAPP_CH4_DimSpeed ((uint32_t)((knx.paramByte(APP_CH4_DimSpeed))))
+#define APP_CH4_BrightnessDay		0x0045
+// Offset: 69, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Tag
+#define ParamAPP_CH4_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH4_BrightnessDay))))
+#define APP_CH4_BrightnessNight		0x0046
+// Offset: 70, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Nacht
+#define ParamAPP_CH4_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH4_BrightnessNight))))
+#define APP_CH5_Active		0x0027
+// Offset: 39, BitOffset: 6, Size: 1 Bit, Text: Kanal 5 aktiv
+#define ParamAPP_CH5_Active knx.paramBit(APP_CH5_Active, 6)
+#define APP_CH5_DimSpeed		0x0047
+// Offset: 71, Size: 8 Bit (1 Byte), Text: Kanal 5 Dimmgeschwindigkeit
+#define ParamAPP_CH5_DimSpeed ((uint32_t)((knx.paramByte(APP_CH5_DimSpeed))))
+#define APP_CH5_BrightnessDay		0x0048
+// Offset: 72, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Tag
+#define ParamAPP_CH5_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH5_BrightnessDay))))
+#define APP_CH5_BrightnessNight		0x0049
+// Offset: 73, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Nacht
+#define ParamAPP_CH5_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH5_BrightnessNight))))
 //!< Number: 0, Text: Zentral, Function: Tag/Nacht
 #define APP_KoGeneralDayNight 0
 #define KoAPP_GeneralDayNight knx.getGroupObject(APP_KoGeneralDayNight)
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)
-
-//---------------------Modules----------------------------
-
-//-----Module specific starts
-#define RGBCCT_ParamBlockOffset 87
-#define RGBCCT_ParamBlockSize 13
-#define RGBW_ParamBlockOffset 100
-#define RGBW_ParamBlockSize 13
-#define DIM_ParamBlockOffset 113
-#define DIM_ParamBlockSize 4
-#define RGB_ParamBlockOffset 117
-#define RGB_ParamBlockSize 13
-#define CCT_ParamBlockOffset 130
-#define CCT_ParamBlockSize 10
-#define RGBCCT_KoOffset 20
-#define RGBCCT_KoBlockSize 27
-#define RGBW_KoOffset 20
-#define RGBW_KoBlockSize 27
-#define DIM_KoOffset 60
-#define DIM_KoBlockSize 22
-#define RGB_KoOffset 20
-#define RGB_KoBlockSize 27
-#define CCT_KoOffset 60
-#define CCT_KoBlockSize 23
-
-//-----Module: RGBCCT
-#define RGBCCT_Active		0x0000
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamRGBCCT_Active knx.paramBit((RGBCCT_ParamBlockOffset + RGBCCT_Active), 0)
-#define RGBCCT_DimSpeed		0x0001
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamRGBCCT_DimSpeed ((uint32_t)((knx.paramByte((RGBCCT_ParamBlockOffset + RGBCCT_DimSpeed)))))
-#define RGBCCT_BrightnessDay		0x0002
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamRGBCCT_BrightnessDay ((uint32_t)((knx.paramByte((RGBCCT_ParamBlockOffset + RGBCCT_BrightnessDay)))))
-#define RGBCCT_BrightnessNight		0x0003
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamRGBCCT_BrightnessNight ((uint32_t)((knx.paramByte((RGBCCT_ParamBlockOffset + RGBCCT_BrightnessNight)))))
-#define RGBCCT_DefaultColorTemp		0x0004
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamRGBCCT_DefaultColorTemp ((uint32_t)((knx.paramWord((RGBCCT_ParamBlockOffset + RGBCCT_DefaultColorTemp)))))
-#define RGBCCT_MinColorTemp		0x0006
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamRGBCCT_MinColorTemp ((uint32_t)((knx.paramWord((RGBCCT_ParamBlockOffset + RGBCCT_MinColorTemp)))))
-#define RGBCCT_MaxColorTemp		0x0008
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamRGBCCT_MaxColorTemp ((uint32_t)((knx.paramWord((RGBCCT_ParamBlockOffset + RGBCCT_MaxColorTemp)))))
-#define RGBCCT_DefaultColor		0x000A
-// Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
-#define ParamRGBCCT_DefaultColor knx.paramData((RGBCCT_ParamBlockOffset + RGBCCT_DefaultColor))
-#define RGBCCT_Type		0x0000
-#define RGBCCT_Type_Shift	4
-#define RGBCCT_Type_Mask	0x0007
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamRGBCCT_Type ((uint32_t)((knx.paramByte((RGBCCT_ParamBlockOffset + RGBCCT_Type)) >> RGBCCT_Type_Shift) & RGBCCT_Type_Mask))
-//!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
-#define RGBCCT_KoSwitch 0
-#define KoRGBCCT_SwitchIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoSwitch + RGBCCT_KoOffset)
-#define KoRGBCCT_Switch knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoSwitch + RGBCCT_KoOffset)
-//!< Number: 1, Text: Kanal {{argChan}}, Function: Helligkeit (absolut)
-#define RGBCCT_KoBrightnessAbsolute 1
-#define KoRGBCCT_BrightnessAbsoluteIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoBrightnessAbsolute + RGBCCT_KoOffset)
-#define KoRGBCCT_BrightnessAbsolute knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoBrightnessAbsolute + RGBCCT_KoOffset)
-//!< Number: 2, Text: Kanal {{argChan}}, Function: Helligkeit (relativ)
-#define RGBCCT_KoBrightnessRelative 2
-#define KoRGBCCT_BrightnessRelativeIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoBrightnessRelative + RGBCCT_KoOffset)
-#define KoRGBCCT_BrightnessRelative knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoBrightnessRelative + RGBCCT_KoOffset)
-//!< Number: 3, Text: Kanal {{argChan}}, Function: Farbtemperatur (absolut)
-#define RGBCCT_KoColorTempAbsolute 3
-#define KoRGBCCT_ColorTempAbsoluteIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoColorTempAbsolute + RGBCCT_KoOffset)
-#define KoRGBCCT_ColorTempAbsolute knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoColorTempAbsolute + RGBCCT_KoOffset)
-//!< Number: 4, Text: Kanal {{argChan}}, Function: Farbtemperatur (relativ)
-#define RGBCCT_KoColorTempRelative 4
-#define KoRGBCCT_ColorTempRelativeIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoColorTempRelative + RGBCCT_KoOffset)
-#define KoRGBCCT_ColorTempRelative knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoColorTempRelative + RGBCCT_KoOffset)
-//!< Number: 5, Text: Kanal {{argChan}}, Function: Sättigung (absolut)
-#define RGBCCT_KoSaturationAbsolute 5
-#define KoRGBCCT_SaturationAbsoluteIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoSaturationAbsolute + RGBCCT_KoOffset)
-#define KoRGBCCT_SaturationAbsolute knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoSaturationAbsolute + RGBCCT_KoOffset)
-//!< Number: 6, Text: Kanal {{argChan}}, Function: Sättigung (relativ)
-#define RGBCCT_KoSaturationRelative 6
-#define KoRGBCCT_SaturationRelativeIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoSaturationRelative + RGBCCT_KoOffset)
-#define KoRGBCCT_SaturationRelative knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoSaturationRelative + RGBCCT_KoOffset)
-//!< Number: 7, Text: Kanal {{argChan}}, Function: Farbton (absolut)
-#define RGBCCT_KoHueAbsolute 7
-#define KoRGBCCT_HueAbsoluteIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoHueAbsolute + RGBCCT_KoOffset)
-#define KoRGBCCT_HueAbsolute knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoHueAbsolute + RGBCCT_KoOffset)
-//!< Number: 8, Text: Kanal {{argChan}}, Function: Farbton (relativ)
-#define RGBCCT_KoHueRelative 8
-#define KoRGBCCT_HueRelativeIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoHueRelative + RGBCCT_KoOffset)
-#define KoRGBCCT_HueRelative knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoHueRelative + RGBCCT_KoOffset)
-//!< Number: 9, Text: Kanal {{argChan}}, Function: Farbe (RGB)
-#define RGBCCT_KoColorRGB 9
-#define KoRGBCCT_ColorRGBIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoColorRGB + RGBCCT_KoOffset)
-#define KoRGBCCT_ColorRGB knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoColorRGB + RGBCCT_KoOffset)
-//!< Number: 10, Text: Kanal {{argChan}}, Function: Farbe (HSV)
-#define RGBCCT_KoColorHSV 10
-#define KoRGBCCT_ColorHSVIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoColorHSV + RGBCCT_KoOffset)
-#define KoRGBCCT_ColorHSV knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoColorHSV + RGBCCT_KoOffset)
-//!< Number: 20, Text: Kanal {{argChan}} (Status), Function: Status
-#define RGBCCT_KoStatus 20
-#define KoRGBCCT_StatusIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatus + RGBCCT_KoOffset)
-#define KoRGBCCT_Status knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatus + RGBCCT_KoOffset)
-//!< Number: 21, Text: Kanal {{argChan}} (Status), Function: Helligkeit
-#define RGBCCT_KoStatusBrightness 21
-#define KoRGBCCT_StatusBrightnessIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusBrightness + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusBrightness knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusBrightness + RGBCCT_KoOffset)
-//!< Number: 22, Text: Kanal {{argChan}} (Status), Function: Farbtemperatur
-#define RGBCCT_KoStatusColorTemp 22
-#define KoRGBCCT_StatusColorTempIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusColorTemp + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusColorTemp knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusColorTemp + RGBCCT_KoOffset)
-//!< Number: 23, Text: Kanal {{argChan}} (Status), Function: Sättigung
-#define RGBCCT_KoStatusSaturation 23
-#define KoRGBCCT_StatusSaturationIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusSaturation + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusSaturation knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusSaturation + RGBCCT_KoOffset)
-//!< Number: 24, Text: Kanal {{argChan}} (Status), Function: Farbton
-#define RGBCCT_KoStatusHue 24
-#define KoRGBCCT_StatusHueIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusHue + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusHue knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusHue + RGBCCT_KoOffset)
-//!< Number: 25, Text: Kanal {{argChan}} (Status), Function: Farbe (RGB)
-#define RGBCCT_KoStatusRGB 25
-#define KoRGBCCT_StatusRGBIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusRGB + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusRGB knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusRGB + RGBCCT_KoOffset)
-//!< Number: 26, Text: Kanal {{argChan}} (Status), Function: Farbe (HSV)
-#define RGBCCT_KoStatusHSV 26
-#define KoRGBCCT_StatusHSVIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoStatusHSV + RGBCCT_KoOffset)
-#define KoRGBCCT_StatusHSV knx.getGroupObject(RGBCCT_KoBlockSize * channelIndex() + RGBCCT_KoStatusHSV + RGBCCT_KoOffset)
-
-//-----Module: RGBW
-#define RGBW_Active		0x0000
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamRGBW_Active knx.paramBit((RGBW_ParamBlockOffset + RGBW_Active), 0)
-#define RGBW_DimSpeed		0x0001
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamRGBW_DimSpeed ((uint32_t)((knx.paramByte((RGBW_ParamBlockOffset + RGBW_DimSpeed)))))
-#define RGBW_BrightnessDay		0x0002
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamRGBW_BrightnessDay ((uint32_t)((knx.paramByte((RGBW_ParamBlockOffset + RGBW_BrightnessDay)))))
-#define RGBW_BrightnessNight		0x0003
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamRGBW_BrightnessNight ((uint32_t)((knx.paramByte((RGBW_ParamBlockOffset + RGBW_BrightnessNight)))))
-#define RGBW_DefaultColorTemp		0x0004
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamRGBW_DefaultColorTemp ((uint32_t)((knx.paramWord((RGBW_ParamBlockOffset + RGBW_DefaultColorTemp)))))
-#define RGBW_MinColorTemp		0x0006
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamRGBW_MinColorTemp ((uint32_t)((knx.paramWord((RGBW_ParamBlockOffset + RGBW_MinColorTemp)))))
-#define RGBW_MaxColorTemp		0x0008
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamRGBW_MaxColorTemp ((uint32_t)((knx.paramWord((RGBW_ParamBlockOffset + RGBW_MaxColorTemp)))))
-#define RGBW_DefaultColor		0x000A
-// Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
-#define ParamRGBW_DefaultColor knx.paramData((RGBW_ParamBlockOffset + RGBW_DefaultColor))
-#define RGBW_Type		0x0000
-#define RGBW_Type_Shift	4
-#define RGBW_Type_Mask	0x0007
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamRGBW_Type ((uint32_t)((knx.paramByte((RGBW_ParamBlockOffset + RGBW_Type)) >> RGBW_Type_Shift) & RGBW_Type_Mask))
-//!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
-#define RGBW_KoSwitch 0
-#define KoRGBW_SwitchIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoSwitch + RGBW_KoOffset)
-#define KoRGBW_Switch knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoSwitch + RGBW_KoOffset)
-//!< Number: 1, Text: Kanal {{argChan}}, Function: Helligkeit (absolut)
-#define RGBW_KoBrightnessAbsolute 1
-#define KoRGBW_BrightnessAbsoluteIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoBrightnessAbsolute + RGBW_KoOffset)
-#define KoRGBW_BrightnessAbsolute knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoBrightnessAbsolute + RGBW_KoOffset)
-//!< Number: 2, Text: Kanal {{argChan}}, Function: Helligkeit (relativ)
-#define RGBW_KoBrightnessRelative 2
-#define KoRGBW_BrightnessRelativeIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoBrightnessRelative + RGBW_KoOffset)
-#define KoRGBW_BrightnessRelative knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoBrightnessRelative + RGBW_KoOffset)
-//!< Number: 3, Text: Kanal {{argChan}}, Function: Farbtemperatur (absolut)
-#define RGBW_KoColorTempAbsolute 3
-#define KoRGBW_ColorTempAbsoluteIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoColorTempAbsolute + RGBW_KoOffset)
-#define KoRGBW_ColorTempAbsolute knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoColorTempAbsolute + RGBW_KoOffset)
-//!< Number: 4, Text: Kanal {{argChan}}, Function: Farbtemperatur (relativ)
-#define RGBW_KoColorTempRelative 4
-#define KoRGBW_ColorTempRelativeIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoColorTempRelative + RGBW_KoOffset)
-#define KoRGBW_ColorTempRelative knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoColorTempRelative + RGBW_KoOffset)
-//!< Number: 5, Text: Kanal {{argChan}}, Function: Sättigung (absolut)
-#define RGBW_KoSaturationAbsolute 5
-#define KoRGBW_SaturationAbsoluteIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoSaturationAbsolute + RGBW_KoOffset)
-#define KoRGBW_SaturationAbsolute knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoSaturationAbsolute + RGBW_KoOffset)
-//!< Number: 6, Text: Kanal {{argChan}}, Function: Sättigung (relativ)
-#define RGBW_KoSaturationRelative 6
-#define KoRGBW_SaturationRelativeIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoSaturationRelative + RGBW_KoOffset)
-#define KoRGBW_SaturationRelative knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoSaturationRelative + RGBW_KoOffset)
-//!< Number: 7, Text: Kanal {{argChan}}, Function: Farbton (absolut)
-#define RGBW_KoHueAbsolute 7
-#define KoRGBW_HueAbsoluteIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoHueAbsolute + RGBW_KoOffset)
-#define KoRGBW_HueAbsolute knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoHueAbsolute + RGBW_KoOffset)
-//!< Number: 8, Text: Kanal {{argChan}}, Function: Farbton (relativ)
-#define RGBW_KoHueRelative 8
-#define KoRGBW_HueRelativeIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoHueRelative + RGBW_KoOffset)
-#define KoRGBW_HueRelative knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoHueRelative + RGBW_KoOffset)
-//!< Number: 9, Text: Kanal {{argChan}}, Function: Farbe (RGB)
-#define RGBW_KoColorRGB 9
-#define KoRGBW_ColorRGBIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoColorRGB + RGBW_KoOffset)
-#define KoRGBW_ColorRGB knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoColorRGB + RGBW_KoOffset)
-//!< Number: 10, Text: Kanal {{argChan}}, Function: Farbe (HSV)
-#define RGBW_KoColorHSV 10
-#define KoRGBW_ColorHSVIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoColorHSV + RGBW_KoOffset)
-#define KoRGBW_ColorHSV knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoColorHSV + RGBW_KoOffset)
-//!< Number: 20, Text: Kanal {{argChan}} (Status), Function: Status
-#define RGBW_KoStatus 20
-#define KoRGBW_StatusIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatus + RGBW_KoOffset)
-#define KoRGBW_Status knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatus + RGBW_KoOffset)
-//!< Number: 21, Text: Kanal {{argChan}} (Status), Function: Helligkeit
-#define RGBW_KoStatusBrightness 21
-#define KoRGBW_StatusBrightnessIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusBrightness + RGBW_KoOffset)
-#define KoRGBW_StatusBrightness knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusBrightness + RGBW_KoOffset)
-//!< Number: 22, Text: Kanal {{argChan}} (Status), Function: Farbtemperatur
-#define RGBW_KoStatusColorTemp 22
-#define KoRGBW_StatusColorTempIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusColorTemp + RGBW_KoOffset)
-#define KoRGBW_StatusColorTemp knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusColorTemp + RGBW_KoOffset)
-//!< Number: 23, Text: Kanal {{argChan}} (Status), Function: Sättigung
-#define RGBW_KoStatusSaturation 23
-#define KoRGBW_StatusSaturationIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusSaturation + RGBW_KoOffset)
-#define KoRGBW_StatusSaturation knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusSaturation + RGBW_KoOffset)
-//!< Number: 24, Text: Kanal {{argChan}} (Status), Function: Farbton
-#define RGBW_KoStatusHue 24
-#define KoRGBW_StatusHueIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusHue + RGBW_KoOffset)
-#define KoRGBW_StatusHue knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusHue + RGBW_KoOffset)
-//!< Number: 25, Text: Kanal {{argChan}} (Status), Function: Farbe (RGB)
-#define RGBW_KoStatusRGB 25
-#define KoRGBW_StatusRGBIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusRGB + RGBW_KoOffset)
-#define KoRGBW_StatusRGB knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusRGB + RGBW_KoOffset)
-//!< Number: 26, Text: Kanal {{argChan}} (Status), Function: Farbe (HSV)
-#define RGBW_KoStatusHSV 26
-#define KoRGBW_StatusHSVIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoStatusHSV + RGBW_KoOffset)
-#define KoRGBW_StatusHSV knx.getGroupObject(RGBW_KoBlockSize * channelIndex() + RGBW_KoStatusHSV + RGBW_KoOffset)
-
-//-----Module: RGB
-#define RGB_Active		0x0000
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamRGB_ActiveIndex(X) knx.paramBit((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_Active), 0)
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamRGB_Active knx.paramBit((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_Active), 0)
-#define RGB_DimSpeed		0x0001
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamRGB_DimSpeedIndex(X) ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_DimSpeed)))))
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamRGB_DimSpeed ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_DimSpeed)))))
-#define RGB_BrightnessDay		0x0002
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamRGB_BrightnessDayIndex(X) ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_BrightnessDay)))))
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamRGB_BrightnessDay ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_BrightnessDay)))))
-#define RGB_BrightnessNight		0x0003
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamRGB_BrightnessNightIndex(X) ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_BrightnessNight)))))
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamRGB_BrightnessNight ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_BrightnessNight)))))
-#define RGB_DefaultColorTemp		0x0004
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamRGB_DefaultColorTempIndex(X) ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_DefaultColorTemp)))))
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamRGB_DefaultColorTemp ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_DefaultColorTemp)))))
-#define RGB_MinColorTemp		0x0006
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamRGB_MinColorTempIndex(X) ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_MinColorTemp)))))
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamRGB_MinColorTemp ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_MinColorTemp)))))
-#define RGB_MaxColorTemp		0x0008
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamRGB_MaxColorTempIndex(X) ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_MaxColorTemp)))))
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamRGB_MaxColorTemp ((uint32_t)((knx.paramWord((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_MaxColorTemp)))))
-#define RGB_DefaultColor		0x000A
-// Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
-#define ParamRGB_DefaultColorIndex(X) knx.paramData((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_DefaultColor))
-// Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
-#define ParamRGB_DefaultColor knx.paramData((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_DefaultColor))
-#define RGB_Type		0x0000
-#define RGB_Type_Shift	4
-#define RGB_Type_Mask	0x0007
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamRGB_TypeIndex(X) ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_Type)) >> RGB_Type_Shift) & RGB_Type_Mask))
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamRGB_Type ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_Type)) >> RGB_Type_Shift) & RGB_Type_Mask))
-//!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
-#define RGB_KoSwitch 0
-#define KoRGB_SwitchIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoSwitch + RGB_KoOffset)
-#define KoRGB_Switch knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoSwitch + RGB_KoOffset)
-//!< Number: 1, Text: Kanal {{argChan}}, Function: Helligkeit (absolut)
-#define RGB_KoBrightnessAbsolute 1
-#define KoRGB_BrightnessAbsoluteIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoBrightnessAbsolute + RGB_KoOffset)
-#define KoRGB_BrightnessAbsolute knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoBrightnessAbsolute + RGB_KoOffset)
-//!< Number: 2, Text: Kanal {{argChan}}, Function: Helligkeit (relativ)
-#define RGB_KoBrightnessRelative 2
-#define KoRGB_BrightnessRelativeIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoBrightnessRelative + RGB_KoOffset)
-#define KoRGB_BrightnessRelative knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoBrightnessRelative + RGB_KoOffset)
-//!< Number: 3, Text: Kanal {{argChan}}, Function: Farbtemperatur (absolut)
-#define RGB_KoColorTempAbsolute 3
-#define KoRGB_ColorTempAbsoluteIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoColorTempAbsolute + RGB_KoOffset)
-#define KoRGB_ColorTempAbsolute knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoColorTempAbsolute + RGB_KoOffset)
-//!< Number: 4, Text: Kanal {{argChan}}, Function: Farbtemperatur (relativ)
-#define RGB_KoColorTempRelative 4
-#define KoRGB_ColorTempRelativeIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoColorTempRelative + RGB_KoOffset)
-#define KoRGB_ColorTempRelative knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoColorTempRelative + RGB_KoOffset)
-//!< Number: 5, Text: Kanal {{argChan}}, Function: Sättigung (absolut)
-#define RGB_KoSaturationAbsolute 5
-#define KoRGB_SaturationAbsoluteIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoSaturationAbsolute + RGB_KoOffset)
-#define KoRGB_SaturationAbsolute knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoSaturationAbsolute + RGB_KoOffset)
-//!< Number: 6, Text: Kanal {{argChan}}, Function: Sättigung (relativ)
-#define RGB_KoSaturationRelative 6
-#define KoRGB_SaturationRelativeIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoSaturationRelative + RGB_KoOffset)
-#define KoRGB_SaturationRelative knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoSaturationRelative + RGB_KoOffset)
-//!< Number: 7, Text: Kanal {{argChan}}, Function: Farbton (absolut)
-#define RGB_KoHueAbsolute 7
-#define KoRGB_HueAbsoluteIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoHueAbsolute + RGB_KoOffset)
-#define KoRGB_HueAbsolute knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoHueAbsolute + RGB_KoOffset)
-//!< Number: 8, Text: Kanal {{argChan}}, Function: Farbton (relativ)
-#define RGB_KoHueRelative 8
-#define KoRGB_HueRelativeIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoHueRelative + RGB_KoOffset)
-#define KoRGB_HueRelative knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoHueRelative + RGB_KoOffset)
-//!< Number: 9, Text: Kanal {{argChan}}, Function: Farbe (RGB)
-#define RGB_KoColorRGB 9
-#define KoRGB_ColorRGBIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoColorRGB + RGB_KoOffset)
-#define KoRGB_ColorRGB knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoColorRGB + RGB_KoOffset)
-//!< Number: 10, Text: Kanal {{argChan}}, Function: Farbe (HSV)
-#define RGB_KoColorHSV 10
-#define KoRGB_ColorHSVIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoColorHSV + RGB_KoOffset)
-#define KoRGB_ColorHSV knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoColorHSV + RGB_KoOffset)
-//!< Number: 20, Text: Kanal {{argChan}} (Status), Function: Status
-#define RGB_KoStatus 20
-#define KoRGB_StatusIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatus + RGB_KoOffset)
-#define KoRGB_Status knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatus + RGB_KoOffset)
-//!< Number: 21, Text: Kanal {{argChan}} (Status), Function: Helligkeit
-#define RGB_KoStatusBrightness 21
-#define KoRGB_StatusBrightnessIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusBrightness + RGB_KoOffset)
-#define KoRGB_StatusBrightness knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusBrightness + RGB_KoOffset)
-//!< Number: 22, Text: Kanal {{argChan}} (Status), Function: Farbtemperatur
-#define RGB_KoStatusColorTemp 22
-#define KoRGB_StatusColorTempIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusColorTemp + RGB_KoOffset)
-#define KoRGB_StatusColorTemp knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusColorTemp + RGB_KoOffset)
-//!< Number: 23, Text: Kanal {{argChan}} (Status), Function: Sättigung
-#define RGB_KoStatusSaturation 23
-#define KoRGB_StatusSaturationIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusSaturation + RGB_KoOffset)
-#define KoRGB_StatusSaturation knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusSaturation + RGB_KoOffset)
-//!< Number: 24, Text: Kanal {{argChan}} (Status), Function: Farbton
-#define RGB_KoStatusHue 24
-#define KoRGB_StatusHueIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusHue + RGB_KoOffset)
-#define KoRGB_StatusHue knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusHue + RGB_KoOffset)
-//!< Number: 25, Text: Kanal {{argChan}} (Status), Function: Farbe (RGB)
-#define RGB_KoStatusRGB 25
-#define KoRGB_StatusRGBIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusRGB + RGB_KoOffset)
-#define KoRGB_StatusRGB knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusRGB + RGB_KoOffset)
-//!< Number: 26, Text: Kanal {{argChan}} (Status), Function: Farbe (HSV)
-#define RGB_KoStatusHSV 26
-#define KoRGB_StatusHSVIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoStatusHSV + RGB_KoOffset)
-#define KoRGB_StatusHSV knx.getGroupObject(RGB_KoBlockSize * channelIndex() + RGB_KoStatusHSV + RGB_KoOffset)
-
-//-----Module: CCT
-#define CCT_Active		0x0000
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamCCT_ActiveIndex(X) knx.paramBit((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_Active), 0)
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamCCT_Active knx.paramBit((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_Active), 0)
-#define CCT_DimSpeed		0x0001
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamCCT_DimSpeedIndex(X) ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_DimSpeed)))))
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamCCT_DimSpeed ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_DimSpeed)))))
-#define CCT_BrightnessDay		0x0002
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamCCT_BrightnessDayIndex(X) ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_BrightnessDay)))))
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamCCT_BrightnessDay ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_BrightnessDay)))))
-#define CCT_BrightnessNight		0x0003
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamCCT_BrightnessNightIndex(X) ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_BrightnessNight)))))
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Nacht
-#define ParamCCT_BrightnessNight ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_BrightnessNight)))))
-#define CCT_DefaultColorTemp		0x0004
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamCCT_DefaultColorTempIndex(X) ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_DefaultColorTemp)))))
-// Offset: 4, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Einschaltfarbtemperatur
-#define ParamCCT_DefaultColorTemp ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_DefaultColorTemp)))))
-#define CCT_MinColorTemp		0x0006
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamCCT_MinColorTempIndex(X) ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_MinColorTemp)))))
-// Offset: 6, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Minimale Farbtemperatur
-#define ParamCCT_MinColorTemp ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_MinColorTemp)))))
-#define CCT_MaxColorTemp		0x0008
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamCCT_MaxColorTempIndex(X) ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_MaxColorTemp)))))
-// Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
-#define ParamCCT_MaxColorTemp ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_MaxColorTemp)))))
-#define CCT_Type		0x0000
-#define CCT_Type_Shift	4
-#define CCT_Type_Mask	0x0007
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamCCT_TypeIndex(X) ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_Type)) >> CCT_Type_Shift) & CCT_Type_Mask))
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamCCT_Type ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_Type)) >> CCT_Type_Shift) & CCT_Type_Mask))
-//!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
-#define CCT_KoSwitch 0
-#define KoCCT_SwitchIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoSwitch + CCT_KoOffset)
-#define KoCCT_Switch knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoSwitch + CCT_KoOffset)
-//!< Number: 1, Text: Kanal {{argChan}}, Function: Helligkeit (absolut)
-#define CCT_KoBrightnessAbsolute 1
-#define KoCCT_BrightnessAbsoluteIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoBrightnessAbsolute + CCT_KoOffset)
-#define KoCCT_BrightnessAbsolute knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoBrightnessAbsolute + CCT_KoOffset)
-//!< Number: 2, Text: Kanal {{argChan}}, Function: Helligkeit (relativ)
-#define CCT_KoBrightnessRelative 2
-#define KoCCT_BrightnessRelativeIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoBrightnessRelative + CCT_KoOffset)
-#define KoCCT_BrightnessRelative knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoBrightnessRelative + CCT_KoOffset)
-//!< Number: 3, Text: Kanal {{argChan}}, Function: Farbtemperatur (absolut)
-#define CCT_KoColorTempAbsolute 3
-#define KoCCT_ColorTempAbsoluteIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoColorTempAbsolute + CCT_KoOffset)
-#define KoCCT_ColorTempAbsolute knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoColorTempAbsolute + CCT_KoOffset)
-//!< Number: 3, Text: Kanal {{argChan}}, Function: Farbtemperatur (relative)
-#define CCT_KoColorTempRelative 3
-#define KoCCT_ColorTempRelativeIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoColorTempRelative + CCT_KoOffset)
-#define KoCCT_ColorTempRelative knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoColorTempRelative + CCT_KoOffset)
-//!< Number: 20, Text: Kanal {{argChan}} (Status), Function: Status
-#define CCT_KoStatus 20
-#define KoCCT_StatusIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoStatus + CCT_KoOffset)
-#define KoCCT_Status knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoStatus + CCT_KoOffset)
-//!< Number: 21, Text: Kanal {{argChan}} (Status), Function: Helligkeit
-#define CCT_KoStatusBrightness 21
-#define KoCCT_StatusBrightnessIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoStatusBrightness + CCT_KoOffset)
-#define KoCCT_StatusBrightness knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoStatusBrightness + CCT_KoOffset)
-//!< Number: 22, Text: Kanal {{argChan}} (Status), Function: Farbtemperatur
-#define CCT_KoStatusColorTemp 22
-#define KoCCT_StatusColorTempIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoStatusColorTemp + CCT_KoOffset)
-#define KoCCT_StatusColorTemp knx.getGroupObject(CCT_KoBlockSize * channelIndex() + CCT_KoStatusColorTemp + CCT_KoOffset)
-
-//-----Module: DIM
-#define DIM_Active		0x0000
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamDIM_ActiveIndex(X) knx.paramBit((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_Active), 0)
-// Offset: 0, Size: 1 Bit, Text: Kanal {{argChan}} aktiv
-#define ParamDIM_Active knx.paramBit((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_Active), 0)
-#define DIM_DimSpeed		0x0001
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamDIM_DimSpeedIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_DimSpeed)))))
-// Offset: 1, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Dimmgeschwindigkeit
-#define ParamDIM_DimSpeed ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_DimSpeed)))))
-#define DIM_BrightnessDay		0x0002
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamDIM_BrightnessDayIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_BrightnessDay)))))
-// Offset: 2, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Tag
-#define ParamDIM_BrightnessDay ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_BrightnessDay)))))
-#define DIM_BrightnessNight		0x0003
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Night
-#define ParamDIM_BrightnessNightIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_BrightnessNight)))))
-// Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Night
-#define ParamDIM_BrightnessNight ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_BrightnessNight)))))
-#define DIM_Type		0x0000
-#define DIM_Type_Shift	4
-#define DIM_Type_Mask	0x0007
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamDIM_TypeIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_Type)) >> DIM_Type_Shift) & DIM_Type_Mask))
-// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
-#define ParamDIM_Type ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_Type)) >> DIM_Type_Shift) & DIM_Type_Mask))
-//!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
-#define DIM_KoSwitch 0
-#define KoDIM_SwitchIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoSwitch + DIM_KoOffset)
-#define KoDIM_Switch knx.getGroupObject(DIM_KoBlockSize * channelIndex() + DIM_KoSwitch + DIM_KoOffset)
-//!< Number: 1, Text: Kanal {{argChan}}, Function: Helligkeit (absolut)
-#define DIM_KoBrightnessAbsolute 1
-#define KoDIM_BrightnessAbsoluteIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoBrightnessAbsolute + DIM_KoOffset)
-#define KoDIM_BrightnessAbsolute knx.getGroupObject(DIM_KoBlockSize * channelIndex() + DIM_KoBrightnessAbsolute + DIM_KoOffset)
-//!< Number: 2, Text: Kanal {{argChan}}, Function: Helligkeit (relativ)
-#define DIM_KoBrightnessRelative 2
-#define KoDIM_BrightnessRelativeIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoBrightnessRelative + DIM_KoOffset)
-#define KoDIM_BrightnessRelative knx.getGroupObject(DIM_KoBlockSize * channelIndex() + DIM_KoBrightnessRelative + DIM_KoOffset)
-//!< Number: 20, Text: Kanal {{argChan}} (Status), Function: Status
-#define DIM_KoStatus 20
-#define KoDIM_StatusIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoStatus + DIM_KoOffset)
-#define KoDIM_Status knx.getGroupObject(DIM_KoBlockSize * channelIndex() + DIM_KoStatus + DIM_KoOffset)
-//!< Number: 21, Text: Kanal {{argChan}} (Status), Function: Helligkeit
-#define DIM_KoStatusBrightness 21
-#define KoDIM_StatusBrightnessIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoStatusBrightness + DIM_KoOffset)
-#define KoDIM_StatusBrightness knx.getGroupObject(DIM_KoBlockSize * channelIndex() + DIM_KoStatusBrightness + DIM_KoOffset)
+//!< Number: 20, Text: Kanal 1, Function: Schalten
+#define APP_KoCH1_Schalten 20
+#define KoAPP_CH1_Schalten knx.getGroupObject(APP_KoCH1_Schalten)
+//!< Number: 21, Text: Kanal 1, Function: Helligkeit (absolut)
+#define APP_KoCH1_BrightnessAbsolute 21
+#define KoAPP_CH1_BrightnessAbsolute knx.getGroupObject(APP_KoCH1_BrightnessAbsolute)
+//!< Number: 22, Text: Kanal 1, Function: Helligkeit (relativ)
+#define APP_KoCH1_BrightnessRelative 22
+#define KoAPP_CH1_BrightnessRelative knx.getGroupObject(APP_KoCH1_BrightnessRelative)
+//!< Number: 23, Text: Kanal 1, Function: Farbtemperatur (absolut)
+#define APP_KoCH1_ColortempAbsolute 23
+#define KoAPP_CH1_ColortempAbsolute knx.getGroupObject(APP_KoCH1_ColortempAbsolute)
+//!< Number: 24, Text: Kanal 1, Function: Farbtemperatur (relativ)
+#define APP_KoCH1_ColortempRelative 24
+#define KoAPP_CH1_ColortempRelative knx.getGroupObject(APP_KoCH1_ColortempRelative)
+//!< Number: 25, Text: Kanal 1, Function: Sättigung (absolut)
+#define APP_KoCH1_SaturationAbsolute 25
+#define KoAPP_CH1_SaturationAbsolute knx.getGroupObject(APP_KoCH1_SaturationAbsolute)
+//!< Number: 26, Text: Kanal 1, Function: Sättigung (relativ)
+#define APP_KoCH1_SaturationRelative 26
+#define KoAPP_CH1_SaturationRelative knx.getGroupObject(APP_KoCH1_SaturationRelative)
+//!< Number: 27, Text: Kanal 1, Function: Farbton (absolut)
+#define APP_KoCH1_HueAbsolute 27
+#define KoAPP_CH1_HueAbsolute knx.getGroupObject(APP_KoCH1_HueAbsolute)
+//!< Number: 28, Text: Kanal 1, Function: Farbton (relativ)
+#define APP_KoCH1_HueRelative 28
+#define KoAPP_CH1_HueRelative knx.getGroupObject(APP_KoCH1_HueRelative)
+//!< Number: 29, Text: Kanal 1, Function: Farbe (RGB)
+#define APP_KoCH1_ColorRGB 29
+#define KoAPP_CH1_ColorRGB knx.getGroupObject(APP_KoCH1_ColorRGB)
+//!< Number: 30, Text: Kanal 1, Function: Farbe (HSV)
+#define APP_KoCH1_ColorHSV 30
+#define KoAPP_CH1_ColorHSV knx.getGroupObject(APP_KoCH1_ColorHSV)
+//!< Number: 40, Text: Kanal 1 (Status), Function: Status
+#define APP_KoCH1_Status 40
+#define KoAPP_CH1_Status knx.getGroupObject(APP_KoCH1_Status)
+//!< Number: 41, Text: Kanal 1 (Status), Function: Helligkeit
+#define APP_KoCH1_Brightness 41
+#define KoAPP_CH1_Brightness knx.getGroupObject(APP_KoCH1_Brightness)
+//!< Number: 42, Text: Kanal 1 (Status), Function: Farbtemperatur
+#define APP_KoCH1_StatusColortemp 42
+#define KoAPP_CH1_StatusColortemp knx.getGroupObject(APP_KoCH1_StatusColortemp)
+//!< Number: 43, Text: Kanal 1 (Status), Function: Sättigung
+#define APP_KoCH1_StatusSaturation 43
+#define KoAPP_CH1_StatusSaturation knx.getGroupObject(APP_KoCH1_StatusSaturation)
+//!< Number: 44, Text: Kanal 1 (Status), Function: Farbton
+#define APP_KoCH1_StatusHue 44
+#define KoAPP_CH1_StatusHue knx.getGroupObject(APP_KoCH1_StatusHue)
+//!< Number: 45, Text: Kanal 1 (Status), Function: Farbe (RGB)
+#define APP_KoCH1_StatusRGB 45
+#define KoAPP_CH1_StatusRGB knx.getGroupObject(APP_KoCH1_StatusRGB)
+//!< Number: 46, Text: Kanal 1 (Status), Function: Farbe (HSV)
+#define APP_KoCH1_StatusHSV 46
+#define KoAPP_CH1_StatusHSV knx.getGroupObject(APP_KoCH1_StatusHSV)
+//!< Number: 60, Text: Kanal 2, Function: Schalten
+#define APP_KoCH2_Schalten 60
+#define KoAPP_CH2_Schalten knx.getGroupObject(APP_KoCH2_Schalten)
+//!< Number: 61, Text: Kanal 2, Function: Helligkeit (absolut)
+#define APP_KoCH2_BrightnessAbsolute 61
+#define KoAPP_CH2_BrightnessAbsolute knx.getGroupObject(APP_KoCH2_BrightnessAbsolute)
+//!< Number: 62, Text: Kanal 2, Function: Helligkeit (relativ)
+#define APP_KoCH2_BrightnessRelative 62
+#define KoAPP_CH2_BrightnessRelative knx.getGroupObject(APP_KoCH2_BrightnessRelative)
+//!< Number: 63, Text: Kanal 2, Function: Farbtemperatur (absolut)
+#define APP_KoCH2_ColortempAbsolute 63
+#define KoAPP_CH2_ColortempAbsolute knx.getGroupObject(APP_KoCH2_ColortempAbsolute)
+//!< Number: 64, Text: Kanal 2, Function: Farbtemperatur (relativ)
+#define APP_KoCH2_ColortempRelative 64
+#define KoAPP_CH2_ColortempRelative knx.getGroupObject(APP_KoCH2_ColortempRelative)
+//!< Number: 80, Text: Kanal 2 (Status), Function: Status
+#define APP_KoCH2_Status 80
+#define KoAPP_CH2_Status knx.getGroupObject(APP_KoCH2_Status)
+//!< Number: 81, Text: Kanal 2 (Status), Function: Helligkeit
+#define APP_KoCH2_Brightness 81
+#define KoAPP_CH2_Brightness knx.getGroupObject(APP_KoCH2_Brightness)
+//!< Number: 82, Text: Kanal 2 (Status), Function: Farbtemperatur
+#define APP_KoCH2_StatusColortemp 82
+#define KoAPP_CH2_StatusColortemp knx.getGroupObject(APP_KoCH2_StatusColortemp)
+//!< Number: 100, Text: Kanal 3, Function: Schalten
+#define APP_KoCH3_Schalten 100
+#define KoAPP_CH3_Schalten knx.getGroupObject(APP_KoCH3_Schalten)
+//!< Number: 101, Text: Kanal 3, Function: Helligkeit (absolut)
+#define APP_KoCH3_BrightnessAbsolute 101
+#define KoAPP_CH3_BrightnessAbsolute knx.getGroupObject(APP_KoCH3_BrightnessAbsolute)
+//!< Number: 102, Text: Kanal 3, Function: Helligkeit (relativ)
+#define APP_KoCH3_BrightnessRelative 102
+#define KoAPP_CH3_BrightnessRelative knx.getGroupObject(APP_KoCH3_BrightnessRelative)
+//!< Number: 120, Text: Kanal 3 (Status), Function: Status
+#define APP_KoCH3_Status 120
+#define KoAPP_CH3_Status knx.getGroupObject(APP_KoCH3_Status)
+//!< Number: 121, Text: Kanal 3 (Status), Function: Helligkeit
+#define APP_KoCH3_Brightness 121
+#define KoAPP_CH3_Brightness knx.getGroupObject(APP_KoCH3_Brightness)
+//!< Number: 140, Text: Kanal 4, Function: Schalten
+#define APP_KoCH4_Schalten 140
+#define KoAPP_CH4_Schalten knx.getGroupObject(APP_KoCH4_Schalten)
+//!< Number: 141, Text: Kanal 4, Function: Helligkeit (absolut)
+#define APP_KoCH4_BrightnessAbsolute 141
+#define KoAPP_CH4_BrightnessAbsolute knx.getGroupObject(APP_KoCH4_BrightnessAbsolute)
+//!< Number: 142, Text: Kanal 4, Function: Helligkeit (relativ)
+#define APP_KoCH4_BrightnessRelative 142
+#define KoAPP_CH4_BrightnessRelative knx.getGroupObject(APP_KoCH4_BrightnessRelative)
+//!< Number: 160, Text: Kanal 4 (Status), Function: Status
+#define APP_KoCH4_Status 160
+#define KoAPP_CH4_Status knx.getGroupObject(APP_KoCH4_Status)
+//!< Number: 161, Text: Kanal 4 (Status), Function: Helligkeit
+#define APP_KoCH4_Brightness 161
+#define KoAPP_CH4_Brightness knx.getGroupObject(APP_KoCH4_Brightness)
+//!< Number: 180, Text: Kanal 5, Function: Schalten
+#define APP_KoCH5_Schalten 180
+#define KoAPP_CH5_Schalten knx.getGroupObject(APP_KoCH5_Schalten)
+//!< Number: 161, Text: Kanal 5, Function: Helligkeit (absolut)
+#define APP_KoCH5_BrightnessAbsolute 161
+#define KoAPP_CH5_BrightnessAbsolute knx.getGroupObject(APP_KoCH5_BrightnessAbsolute)
+//!< Number: 162, Text: Kanal 5, Function: Helligkeit (relativ)
+#define APP_KoCH5_BrightnessRelative 162
+#define KoAPP_CH5_BrightnessRelative knx.getGroupObject(APP_KoCH5_BrightnessRelative)
+//!< Number: 200, Text: Kanal 5 (Status), Function: Status
+#define APP_KoCH5_Status 200
+#define KoAPP_CH5_Status knx.getGroupObject(APP_KoCH5_Status)
+//!< Number: 201, Text: Kanal 5 (Status), Function: Helligkeit
+#define APP_KoCH5_Brightness 201
+#define KoAPP_CH5_Brightness knx.getGroupObject(APP_KoCH5_Brightness)
 
