@@ -7,58 +7,120 @@ void knxCallback(GroupObject &go)
     // this means, we have to check, which GroupObject is calling back
     switch (go.asap())
     {
-    case APP_KoGeneralDayNight:
+/*    case APP_KoGeneralDayNight:
     {
-        bool itsDay = go.value(DPT_Switch);
-        uint8_t defaultBrightness = itsDay ? ParamAPP_BrightnessDay : ParamAPP_BrightnessNight;
-        Light.configDefaultBrightness(defaultBrightness);
+        bool itsDay;
+				(ParamAPP_DayNight) ? (itsDay = go.value(DPT_Switch)) : (itsDay = !go.value(DPT_Switch));
+        uint8_t defaultBrightness = itsDay ? ParamRGBCCT_BrightnessDay : ParamRGBCCT_BrightnessNight;
+        Light1.configDefaultBrightness(defaultBrightness);
+        defaultBrightness = itsDay ? ParamRGBCCT_BrightnessDay : ParamRGBCCT_BrightnessNight;
+        Light2.configDefaultBrightness(defaultBrightness);
+        Light3.configDefaultBrightness(defaultBrightness);
+        Light4.configDefaultBrightness(defaultBrightness);
+        Light5.configDefaultBrightness(defaultBrightness);
         break;
-    }
-    case APP_KoLightOnOff:
+    } */
+		case RGBCCT_KoSwitch: Light1.switchLight(go.value(DPT_Switch)); break;
+/*    case APP_KoLightOnOff:
     {
         Light.switchLight(go.value(DPT_Switch));
         break;
     }
-    case APP_KoLightBrightness:
+/*    case APP_KoLightBrightnessAbs:
     {
         Light.setBrightness(go.value(DPT_Percent_U8));
         break;
     }
-    case APP_KoLightDim:
+    case APP_KoLightBrightnessRel:
     {
         dpt3_t dimCmd;
         dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
         Light.setRelDimCmd(dimCmd);
         break;
     }
-    case APP_KoLightColorTemp:
+    case APP_KoLightColorTempAbs:
     {
         Light.setTemperature(go.value(DPT_Value_2_Ucount));
         break;
     }
-    case APP_KoLightColorTempRelative:
+    case APP_KoLightColorTempRel:
     {
         dpt3_t dimCmd;
         dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
         Light.setRelTemperatureCmd(dimCmd);
         break;
     }
+    case APP_KoLightColorRgb:
+    {
+        rgb_t rgb;
+        rgb.fromDPT232600(go.value(DPT_Colour_RGB));
+        Light.setRgb(rgb);
+        break;
     }
+    case APP_KoLightColorHsv:
+    {
+        hsv_t hsv;
+        hsv.fromDPT232600(go.value(DPT_Colour_RGB));
+        Light.setHsv(hsv);
+        break;
+    }
+    case APP_KoLightHueRel:
+    {
+        dpt3_t dimCmd;
+        dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
+        Light.setRelHueCmd(dimCmd);
+        break;
+    }
+    case APP_KoLightSaturationRel:
+    {
+        dpt3_t dimCmd;
+        dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
+        Light.setRelSaturationCmd(dimCmd);
+        break;
+    }
+    case APP_KoLightHueAbs:
+    {
+        hsv_t hsv = Light.getHsv();
+        hsv.h = go.value(DPT_Percent_U8);
+        Light.setHsv(hsv);
+        break;
+    }
+    case APP_KoLightSaturationAbs:
+    {
+        hsv_t hsv = Light.getHsv();
+        hsv.s = go.value(DPT_Percent_U8);
+        Light.setHsv(hsv);
+        break;
+    }
+*/    }
+
 }
 
 void statusCallback(bool state)
 {
-    KoAPP_LightStatus.value(state, DPT_Switch);
+//    KoAPP_LightStatus.value(state, DPT_Switch);
 }
 
 void responseBrightnessCallback(uint8_t value)
 {
-    KoAPP_LightStatusBrightness.value(value, DPT_Percent_U8);
+//    KoAPP_LightStatusBrightness.value(value, DPT_Percent_U8);
 }
 
 void responseTemperatureCallback(uint16_t value)
 {
-    KoAPP_LightStatusColorTemp.value(value, DPT_Value_2_Ucount);
+//    KoAPP_LightStatusColorTemp.value(value, DPT_Value_2_Ucount);
+}
+
+void responseColorHsvCallback(hsv_t value)
+{
+//    KoAPP_LightStatusColorHsv.value(value.toDPT232600(), DPT_Colour_RGB);
+//    KoAPP_LightStatusHue.value(value.h, DPT_Percent_U8);
+//    KoAPP_LightStatusSaturation.value(value.s, DPT_Percent_U8);
+}
+
+void responseColorRgbCallback(rgb_t value)
+{
+//    KoAPP_LightStatusColorRgb.value(value.toDPT232600(), DPT_Colour_RGB);
 }
 
 void setup()
@@ -85,7 +147,7 @@ void setup()
     // read adress table, association table, groupobject table and parameters from eeprom
     knx.readMemory();
 
-    knxConfigOk = knx.configured() && checkKnxApp() && knx.bau().groupObjectTable().entryCount() == MAIN_MaxKoNumber; //MAIN_ParameterSize
+    knxConfigOk = knx.configured() && checkKnxApp(); // && knx.bau().groupObjectTable().entryCount() == MAIN_MaxKoNumber; //MAIN_ParameterSize
 
     // Setup device after device was configured by ETS
     if (knxConfigOk)
@@ -95,24 +157,56 @@ void setup()
         // read hostname from ETS config
         HOSTNAME = (char *)knx.paramData(APP_Hostname);
 
+				// read channel setup and individual parameters from ETS config
+				if (ParamAPP_ChannelMode == PT_ChannelModes_RGBCCT) {
+					if (ParamRGBCCT_Active == PT_OnOff_Ein) {
+						Serial.println("Channel setup: RGBCCT, 1 light");
+						Serial.print("Active: "); Serial.println(ParamRGBCCT_Active);
+						Light1.configActive(ParamRGBCCT_Active);
+						Serial.print("Dim Speed: "); Serial.println(ParamRGBCCT_DimSpeed);
+						Light1.configDimSpeed(ParamRGBCCT_DimSpeed);
+						Serial.print("Min CT: "); Serial.println(ParamRGBCCT_MinColorTemp);
+						Light1.configMinTemperature(ParamRGBCCT_MinColorTemp);
+						Serial.print("Max CT: "); Serial.println(ParamRGBCCT_MaxColorTemp);
+						Light1.configMinTemperature(ParamRGBCCT_MaxColorTemp);
+						Serial.print("Def CT: "); Serial.println(ParamRGBCCT_DefaultColorTemp);
+						Light1.configDefaultTemperature(ParamRGBCCT_DefaultColorTemp);
+						Serial.print("Def Brightness: "); Serial.println(ParamRGBCCT_BrightnessDay);
+						Light1.configDefaultBrightness(ParamRGBCCT_BrightnessDay);
+						hsv_t paraDefaultHSV;
+						paraDefaultHSV.fromDPT232600(ParamRGBCCT_DefaultColorTemp);
+						Light1.configDefaultHsv(paraDefaultHSV);
+
+
+						Light1.initRgbcctLight(ParamAPP_GPIO_PWM1, ParamAPP_GPIO_PWM2, ParamAPP_GPIO_PWM3, ParamAPP_GPIO_PWM4, ParamAPP_GPIO_PWM5, CCT_MODE);
+					}
+				}
+
         // read parameters from ETS config
-        Light.configDimSpeed(ParamAPP_DimSpeed);
-        Light.configDefaultBrightness(ParamAPP_BrightnessDay);
-        Light.configDefaultTemperature(ParamAPP_DefaultColorTemp);
+/*        Light.configDimSpeed(ParamAPP_DimSpeed);
+        Light.configDefaultBrightness(ParamAPP_LightBrightnessDay);
+        Light.configDefaultTemperature(ParamAPP_LightDefaultColorTemp);
+        hsv_t paraDefaultHsv;
+        paraDefaultHsv.fromDPT232600(knx.paramInt(48));
+        Light.configDefaultHsv(paraDefaultHsv);
 
         // register callbacks from LED controllers
         Light.registerStatusCallback(statusCallback);
         Light.registerBrightnessCallback(responseBrightnessCallback);
         Light.registerTemperatureCallback(responseTemperatureCallback);
+        Light.registerColorHsvCallback(responseColorHsvCallback);
+        Light.registerColorRgbCallback(responseColorRgbCallback);
+				*/
     }
-    Light.initTunableWhiteLight(LED_PIN_CW, LED_PIN_WW, CCT_MODE);
+//    Light.initRgbcctLight(LED_PIN_R, LED_PIN_G, LED_PIN_B, LED_PIN_CW, LED_PIN_WW, CCT_MODE);
 
     Serial.println(HOSTNAME);
     Serial.println(getKnxPhysAddr());
+		Serial.print("Channel mode: "); Serial.println(ParamAPP_ChannelMode);
 
     // Red status led off and green led on after setup
 		#ifdef STAT_LED_GN
-    digitalWrite(STAT_LED_GN, STAT_LED_ON);
+		digitalWrite(STAT_LED_GN, STAT_LED_ON);
 		#endif
 		#ifdef STAT_LED_RD
     digitalWrite(STAT_LED_RD, STAT_LED_OFF);
@@ -176,11 +270,11 @@ void loop()
 
         if (!initSent)
         {
-            Light.sendStatusUpdate();
+//            Light.sendStatusUpdate();
             initSent = true;
         }
 
-        Light.loop();
+ //       Light.loop();
     }
     else
     {

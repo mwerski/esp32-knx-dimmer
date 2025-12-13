@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <knx.h>
-#include <knxprod.h>
+#include "../knxprod.h"
 #include "settings.h"
 #include "credentials.h"
 #include <esp-knx-common.h>
@@ -24,7 +24,11 @@
 
 bool knxConfigOk = false;
 bool initSent = false;
-KnxLed Light = KnxLed();
+KnxLed Light1 = KnxLed();
+KnxLed Light2 = KnxLed();
+KnxLed Light3 = KnxLed();
+KnxLed Light4 = KnxLed();
+KnxLed Light5 = KnxLed();
 KnxWebserver knxWebServ = KnxWebserver();
 void setup();
 void loop();
@@ -33,3 +37,5 @@ void knxCallback(GroupObject &go);
 void statusCallback(bool state);
 void responseBrightnessCallback(uint8_t value);
 void responseTemperatureCallback(uint16_t value);
+void responseColorHsvCallback(hsv_t value);
+void responseColorRgbCallback(rgb_t value);
