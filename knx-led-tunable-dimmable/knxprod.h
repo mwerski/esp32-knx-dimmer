@@ -15,6 +15,12 @@
 #define PT_ChannelModes_CCT_CCT_D 4
 #define PT_ChannelModes_CCT_D_D_D 5
 #define PT_ChannelModes_D_D_D_D_D 6
+#define PT_lightType_none 0
+#define PT_lightType_RGBCCT 1
+#define PT_lightType_RGBW 2
+#define PT_lightType_RGB 3
+#define PT_lightType_TUNEABLE 4
+#define PT_lightType_DIMMABLE 5
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
@@ -129,6 +135,11 @@
 #define RGBCCT_DefaultColor		0x000A
 // Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
 #define ParamRGBCCT_DefaultColor knx.paramData((RGBCCT_ParamBlockOffset + RGBCCT_DefaultColor))
+#define RGBCCT_Type		0x0000
+#define RGBCCT_Type_Shift	4
+#define RGBCCT_Type_Mask	0x0007
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamRGBCCT_Type ((uint32_t)((knx.paramByte((RGBCCT_ParamBlockOffset + RGBCCT_Type)) >> RGBCCT_Type_Shift) & RGBCCT_Type_Mask))
 //!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
 #define RGBCCT_KoSwitch 0
 #define KoRGBCCT_SwitchIndex(X) knx.getGroupObject(RGBCCT_KoBlockSize * X + RGBCCT_KoSwitch + RGBCCT_KoOffset)
@@ -227,6 +238,11 @@
 #define RGBW_DefaultColor		0x000A
 // Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
 #define ParamRGBW_DefaultColor knx.paramData((RGBW_ParamBlockOffset + RGBW_DefaultColor))
+#define RGBW_Type		0x0000
+#define RGBW_Type_Shift	4
+#define RGBW_Type_Mask	0x0007
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamRGBW_Type ((uint32_t)((knx.paramByte((RGBW_ParamBlockOffset + RGBW_Type)) >> RGBW_Type_Shift) & RGBW_Type_Mask))
 //!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
 #define RGBW_KoSwitch 0
 #define KoRGBW_SwitchIndex(X) knx.getGroupObject(RGBW_KoBlockSize * X + RGBW_KoSwitch + RGBW_KoOffset)
@@ -341,6 +357,13 @@
 #define ParamRGB_DefaultColorIndex(X) knx.paramData((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_DefaultColor))
 // Offset: 10, Size: 24 Bit (3 Byte), Text: Kanal {{argChan}} Einschaltfarbe
 #define ParamRGB_DefaultColor knx.paramData((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_DefaultColor))
+#define RGB_Type		0x0000
+#define RGB_Type_Shift	4
+#define RGB_Type_Mask	0x0007
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamRGB_TypeIndex(X) ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * X + RGB_Type)) >> RGB_Type_Shift) & RGB_Type_Mask))
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamRGB_Type ((uint32_t)((knx.paramByte((RGB_ParamBlockOffset + RGB_ParamBlockSize * channelIndex() + RGB_Type)) >> RGB_Type_Shift) & RGB_Type_Mask))
 //!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
 #define RGB_KoSwitch 0
 #define KoRGB_SwitchIndex(X) knx.getGroupObject(RGB_KoBlockSize * X + RGB_KoSwitch + RGB_KoOffset)
@@ -450,6 +473,13 @@
 #define ParamCCT_MaxColorTempIndex(X) ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_MaxColorTemp)))))
 // Offset: 8, Size: 16 Bit (2 Byte), Text: Kanal {{argChan}} Maximale Farbtemperatur
 #define ParamCCT_MaxColorTemp ((uint32_t)((knx.paramWord((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_MaxColorTemp)))))
+#define CCT_Type		0x0000
+#define CCT_Type_Shift	4
+#define CCT_Type_Mask	0x0007
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamCCT_TypeIndex(X) ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * X + CCT_Type)) >> CCT_Type_Shift) & CCT_Type_Mask))
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamCCT_Type ((uint32_t)((knx.paramByte((CCT_ParamBlockOffset + CCT_ParamBlockSize * channelIndex() + CCT_Type)) >> CCT_Type_Shift) & CCT_Type_Mask))
 //!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
 #define CCT_KoSwitch 0
 #define KoCCT_SwitchIndex(X) knx.getGroupObject(CCT_KoBlockSize * X + CCT_KoSwitch + CCT_KoOffset)
@@ -504,6 +534,13 @@
 #define ParamDIM_BrightnessNightIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_BrightnessNight)))))
 // Offset: 3, Size: 8 Bit (1 Byte), Text: Kanal {{argChan}} Einschalthelligkeit Night
 #define ParamDIM_BrightnessNight ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_BrightnessNight)))))
+#define DIM_Type		0x0000
+#define DIM_Type_Shift	4
+#define DIM_Type_Mask	0x0007
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamDIM_TypeIndex(X) ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * X + DIM_Type)) >> DIM_Type_Shift) & DIM_Type_Mask))
+// Offset: 0, BitOffset: 1, Size: 3 Bit, Text: Dummy
+#define ParamDIM_Type ((uint32_t)((knx.paramByte((DIM_ParamBlockOffset + DIM_ParamBlockSize * channelIndex() + DIM_Type)) >> DIM_Type_Shift) & DIM_Type_Mask))
 //!< Number: 0, Text: Kanal {{argChan}}, Function: Schalten
 #define DIM_KoSwitch 0
 #define KoDIM_SwitchIndex(X) knx.getGroupObject(DIM_KoBlockSize * X + DIM_KoSwitch + DIM_KoOffset)
