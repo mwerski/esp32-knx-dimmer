@@ -11,3 +11,4 @@
 #define LED_PIN_CW 19
 #define LED_PIN_WW 18
 #define CCT_MODE NORMAL
+#define WHITE_LED_RGB_EQUIVALENT {255, 198, 175} // About 4200 Kelvin -24 green
