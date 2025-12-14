@@ -28,6 +28,7 @@
 // ----------------------------------------------------
 extern bool knxConfigOk;
 extern bool initSent;
+extern unsigned long lastHeartbeat;
 
 // ----------------------------------------------------
 // Lights

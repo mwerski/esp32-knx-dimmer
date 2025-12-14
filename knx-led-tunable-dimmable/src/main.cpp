@@ -9,11 +9,17 @@ KnxLed Light5 = KnxLed();
 bool knxConfigOk = false;
 bool initSent = false;
 KnxWebserver knxWebServ = KnxWebserver();
+static uint32_t startMs = millis();
+static uint32_t startUpDelay = 0;
 
 // callback from knx value change
 void knxCallback(GroupObject &go) {
 	// callbacks are now handled in the class, not per instance,
 	// this means, we have to check, which GroupObject is calling back
+	#ifdef DEBUG
+	Serial.print("KNX callback: ");
+	Serial.println(go.asap());
+	#endif
 	switch (go.asap()) {
 		case APP_KoGeneralDayNight: {
 			bool itsDay;
@@ -81,8 +87,8 @@ void knxCallback(GroupObject &go) {
 			break;
 		}
 
-		case APP_KoCH1_ColortempAbsolute: { Light1.setTemperature(go.value(DPT_Percent_U8)); break; }
-		case APP_KoCH2_ColortempAbsolute: { Light2.setTemperature(go.value(DPT_Percent_U8)); break; }
+		case APP_KoCH1_ColortempAbsolute: { Light1.setTemperature(go.value(DPT_Value_2_Ucount)); break; }
+		case APP_KoCH2_ColortempAbsolute: { Light2.setTemperature(go.value(DPT_Value_2_Ucount)); break; }
 
 		case APP_KoCH1_ColortempRelative: {
 			dpt3_t dimCmd;
@@ -107,7 +113,7 @@ void knxCallback(GroupObject &go) {
 			rgb.fromDPT232600(go.value(DPT_Colour_RGB));
 			Light1.setRgb(rgb);
 		}
-	
+
 		case APP_KoCH1_HueAbsolute: {
 			hsv_t hsv = Light1.getHsv();
 			hsv.h = go.value(DPT_Percent_U8);
@@ -205,10 +211,448 @@ static inline void printActive(uint8_t ch, const char* type, uint32_t active) {
 	#endif
 }
 
+// -------- Parameter-Getter pro Kanal (1..5) --------
+static inline uint32_t chActive(uint8_t ch) {
+  switch (ch) {
+    case 1: return ParamAPP_CH1_Active;
+    case 2: return ParamAPP_CH2_Active;
+    case 3: return ParamAPP_CH3_Active;
+    case 4: return ParamAPP_CH4_Active;
+    case 5: return ParamAPP_CH5_Active;
+    default: return 0;
+  }
+}
+
+static inline uint8_t chDimSpeed(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint8_t)ParamAPP_CH1_DimSpeed;
+    case 2: return (uint8_t)ParamAPP_CH2_DimSpeed;
+    case 3: return (uint8_t)ParamAPP_CH3_DimSpeed;
+    case 4: return (uint8_t)ParamAPP_CH4_DimSpeed;
+    case 5: return (uint8_t)ParamAPP_CH5_DimSpeed;
+    default: return 0;
+  }
+}
+
+static inline uint8_t chBrightnessDay(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint8_t)ParamAPP_CH1_BrightnessDay;
+    case 2: return (uint8_t)ParamAPP_CH2_BrightnessDay;
+    case 3: return (uint8_t)ParamAPP_CH3_BrightnessDay;
+    case 4: return (uint8_t)ParamAPP_CH4_BrightnessDay;
+    case 5: return (uint8_t)ParamAPP_CH5_BrightnessDay;
+    default: return 0;
+  }
+}
+
+static inline uint16_t chMinCT(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint16_t)ParamAPP_CH1_MinColorTemp;
+    case 2: return (uint16_t)ParamAPP_CH2_MinColorTemp;
+    default: return 0;
+  }
+}
+
+static inline uint16_t chMaxCT(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint16_t)ParamAPP_CH1_MaxColorTemp;
+    case 2: return (uint16_t)ParamAPP_CH2_MaxColorTemp;
+    default: return 0;
+  }
+}
+
+static inline uint16_t chDefCT(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint16_t)ParamAPP_CH1_DefaultColorTemp;
+    case 2: return (uint16_t)ParamAPP_CH2_DefaultColorTemp;
+    default: return 0;
+  }
+}
+
+// Wichtig: DefaultColor ist 24 Bit / 3 Byte => paramData liefert Pointer.
+static inline uint32_t chDefColorRaw(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint32_t)knx.paramInt(APP_CH1_DefaultColor);
+    default: return 0;
+  }
+}
+
+static inline hsv_t chDefHsv(uint8_t ch) {
+  hsv_t hsv;
+  hsv.fromDPT232600(chDefColorRaw(ch));
+  return hsv;
+}
+
+// light setup functions
+static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t cwPin, uint8_t wwPin) {
+  printActive(ch, "RGBCCT", chActive(ch));
+  if (chActive(ch) != PT_OnOff_Ein) return;
+  L.configDimSpeed(chDimSpeed(ch));
+  L.configMinTemperature(chMinCT(ch));
+  L.configMaxTemperature(chMaxCT(ch));
+  L.configDefaultTemperature(chDefCT(ch));
+  L.configDefaultBrightness(chBrightnessDay(ch));
+  hsv_t hsv = chDefHsv(ch);
+  L.configDefaultHsv(hsv);
+  L.initRgbcctLight(rPin, gPin, bPin, cwPin, wwPin, CCT_MODE);
+	#ifdef DEBUG
+  Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
+  Serial.print("Min CT: "); Serial.println(chMinCT(ch));
+  Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
+  Serial.print("Def CT: "); Serial.println(chDefCT(ch));
+  Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
+	#endif
+}
+
+static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t wPin) {
+  printActive(ch, "RGBW", chActive(ch));
+  if (chActive(ch) != PT_OnOff_Ein) return;
+  L.configDimSpeed(chDimSpeed(ch));
+  L.configMinTemperature(chMinCT(ch));
+  L.configMaxTemperature(chMaxCT(ch));
+  L.configDefaultTemperature(chDefCT(ch));
+  L.configDefaultBrightness(chBrightnessDay(ch));
+  hsv_t hsv = chDefHsv(ch);
+  L.configDefaultHsv(hsv);
+  L.initRgbwLight(rPin, gPin, bPin, wPin, WHITE_LED_RGB_EQUIVALENT);
+	#ifdef DEBUG
+	Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
+  Serial.print("Min CT: "); Serial.println(chMinCT(ch));
+  Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
+  Serial.print("Def CT: "); Serial.println(chDefCT(ch));
+  Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
+	#endif
+}
+
+static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin) {
+  printActive(ch, "RGB", chActive(ch));
+  if (chActive(ch) != PT_OnOff_Ein) return;
+  L.configDimSpeed(chDimSpeed(ch));
+  L.configDefaultBrightness(chBrightnessDay(ch));
+  L.configMinTemperature(chMinCT(ch));
+  L.configMaxTemperature(chMaxCT(ch));
+	L.configDefaultTemperature(ch);
+  hsv_t hsv = chDefHsv(ch);
+  L.configDefaultHsv(hsv);
+  L.initRgbLight(rPin, gPin, bPin);
+	#ifdef DEBUG
+  Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
+  Serial.print("Min CT: "); Serial.println(chMinCT(ch));
+  Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
+  Serial.print("Def CT: "); Serial.println(chDefCT(ch));
+  Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
+	#endif
+}
+
+static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
+  printActive(ch, "CCT", chActive(ch));
+  if (chActive(ch) != PT_OnOff_Ein) return;
+  L.configDimSpeed(chDimSpeed(ch));
+  L.configMinTemperature(chMinCT(ch));
+  L.configMaxTemperature(chMaxCT(ch));
+  L.configDefaultTemperature(chDefCT(ch));
+  L.configDefaultBrightness(chBrightnessDay(ch));
+  L.initTunableWhiteLight(cwPin, wwPin, CCT_MODE);
+	#ifdef DEBUG
+  Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
+  Serial.print("Min CT: "); Serial.println(chMinCT(ch));
+  Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
+  Serial.print("Def CT: "); Serial.println(chDefCT(ch));
+  Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+	#endif
+}
+
+static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
+  printActive(ch, "DIM", chActive(ch));
+  if (chActive(ch) != PT_OnOff_Ein) return;
+	L.configDimSpeed(chDimSpeed(ch));
+  L.configDefaultBrightness(chBrightnessDay(ch));
+  L.initDimmableLight(pwmPin);
+	#ifdef DEBUG
+  Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
+  Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+	#endif
+}
+
+static void setupLightsFromEts() {
+  #ifdef DEBUG
+	sep();
+	#endif
+
+  // GPIOs (Param... sind uint32_t-Makros, KnxLed erwartet uint8_t)
+  const uint8_t P1 = (uint8_t)ParamAPP_GPIO_PWM1;
+  const uint8_t P2 = (uint8_t)ParamAPP_GPIO_PWM2;
+  const uint8_t P3 = (uint8_t)ParamAPP_GPIO_PWM3;
+  const uint8_t P4 = (uint8_t)ParamAPP_GPIO_PWM4;
+  const uint8_t P5 = (uint8_t)ParamAPP_GPIO_PWM5;
+
+  switch (ParamAPP_ChannelMode) {
+
+    case PT_ChannelModes_RGBCCT: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: RGBCCT, 1 light");
+			sep();
+			#endif
+      setupRgbcct(Light1, 1, P1, P2, P3, P4, P5);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
+        Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
+        Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+      break;
+    }
+
+    case PT_ChannelModes_RGBW_D: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: RGBW_D, 2 lights");
+			sep();
+			#endif
+      setupRgbw(Light1, 1, P1, P2, P3, P4);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
+        Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
+        Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light2, 2, P5);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+      break;
+    }
+
+    case PT_ChannelModes_RGB_CCT: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: RGB_CCT, 2 lights");
+			sep();
+			#endif
+      setupRgb(Light1, 1, P1, P2, P3);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
+        Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupCct(Light2, 2, P4, P5);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+        Light2.registerTemperatureCallback(responseTemperatureCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+      break;
+    }
+
+    case PT_ChannelModes_RGB_D_D: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: RGB_D_D, 3 lights");
+			sep();
+			#endif
+      setupRgb(Light1, 1, P1, P2, P3);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+				Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
+        Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
+        Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light2, 2, P4);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light3, 3, P5);
+      if (chActive(3) == PT_OnOff_Ein) {
+        Light3.registerStatusCallback(statusCallback_L3);
+        Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+			break;
+    }
+
+    case PT_ChannelModes_CCT_CCT_D: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: CCT_CCT_D, 3 lights");
+			sep();
+			#endif
+      setupCct(Light1, 1, P1, P2);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupCct(Light2, 2, P3, P4);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+        Light2.registerTemperatureCallback(responseTemperatureCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light3, 3, P5);
+      if (chActive(3) == PT_OnOff_Ein) {
+        Light3.registerStatusCallback(statusCallback_L3);
+        Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+			break;
+    }
+
+    case PT_ChannelModes_CCT_D_D_D: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: CCT_D_D_D, 4 lights");
+			sep();
+			#endif
+      setupCct(Light1, 1, P1, P2);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light2, 2, P3);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light3, 3, P4);
+      if (chActive(3) == PT_OnOff_Ein) {
+        Light3.registerStatusCallback(statusCallback_L3);
+        Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light4, 4, P5);
+      if (chActive(4) == PT_OnOff_Ein) {
+        Light4.registerStatusCallback(statusCallback_L4);
+        Light4.registerBrightnessCallback(responseBrightnessCallback_L4);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+			break;
+    }
+
+    case PT_ChannelModes_D_D_D_D_D: {
+			#ifdef DEBUG
+      Serial.println("Channel setup: D_D_D_D_D, 5 lights");
+			sep();
+			#endif
+      setupDim(Light1, 1, P1);
+      if (chActive(1) == PT_OnOff_Ein) {
+        Light1.registerStatusCallback(statusCallback_L1);
+        Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light2, 2, P2);
+      if (chActive(2) == PT_OnOff_Ein) {
+        Light2.registerStatusCallback(statusCallback_L2);
+        Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light3, 3, P3);
+      if (chActive(3) == PT_OnOff_Ein) {
+        Light3.registerStatusCallback(statusCallback_L3);
+        Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light4, 4, P4);
+      if (chActive(4) == PT_OnOff_Ein) {
+        Light4.registerStatusCallback(statusCallback_L4);
+        Light4.registerBrightnessCallback(responseBrightnessCallback_L4);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+      setupDim(Light5, 5, P5);
+      if (chActive(5) == PT_OnOff_Ein) {
+        Light5.registerStatusCallback(statusCallback_L5);
+        Light5.registerBrightnessCallback(responseBrightnessCallback_L5);
+      }
+			#ifdef DEBUG
+			sep();
+			#endif
+
+			break;
+    }
+
+    default:
+			#ifdef DEBUG
+      Serial.println("Unknown ChannelMode. No lights initialized.");
+			sep();
+			#endif
+      break;
+  }
+}
+
 
 
 
 void setup() {
+	startMs = millis();
 	#ifdef ESP8266
 	Serial.begin(74880);
 	#else
@@ -235,15 +679,14 @@ void setup() {
 
 	// Setup device after device was configured by ETS
 	if (knxConfigOk) {
-		Serial.print("HEARTBEAT: ");
-		Serial.println(ParamAPP_Heartbeat);
-
 		GroupObject::classCallback(knxCallback); // callbacks are now handled per class, not per instance
-
 		// read hostname from ETS config
 		HOSTNAME = (char *)knx.paramData(APP_Hostname);
-
 		// read channel setup and individual parameters from ETS config
+		setupLightsFromEts();
+
+		startUpDelay = ParamAPP_StartUpDelay * 1000;
+/*
 		if (ParamAPP_ChannelMode == PT_ChannelModes_RGBCCT) {
 			Serial.println("--------------------------------------------------");
 			Serial.println("Channel setup: RGBCCT, 1 light");
@@ -582,11 +1025,14 @@ void setup() {
 			}
 			Serial.println("--------------------------------------------------");
 		}
+*/
 
 	}
-
 	Serial.println(HOSTNAME);
 	Serial.println(getKnxPhysAddr());
+	#ifdef DEBUG
+	Serial.print("StartUp Delay: "); Serial.print(startUpDelay); Serial.println("ms");
+	#endif
 
 	// Red status led off and green led on after setup
 	#ifdef STAT_LED_GN
@@ -638,6 +1084,8 @@ void setup() {
 }
 
 void loop() {
+	uint32_t currentMillis = millis();
+
 	if (WiFi.status() == WL_CONNECTED) {
 		knxWebServ.loop();
 			if(getKnxActive()) {
@@ -646,12 +1094,15 @@ void loop() {
 		// only run the application code if the device was configured with ETS
 		if (!knxConfigOk) return;
 
+		// startup delay
+		if ( (currentMillis - startMs) < startUpDelay) return;
+
 		if (!initSent) {
-			Light1.sendStatusUpdate();
-			Light2.sendStatusUpdate();
-			Light3.sendStatusUpdate();
-			Light4.sendStatusUpdate();
-			Light5.sendStatusUpdate();
+			if (ParamAPP_CH1_Active) Light1.sendStatusUpdate();
+			if (ParamAPP_CH2_Active) Light2.sendStatusUpdate();
+			if (ParamAPP_CH3_Active) Light3.sendStatusUpdate();
+			if (ParamAPP_CH4_Active) Light4.sendStatusUpdate();
+			if (ParamAPP_CH5_Active) Light5.sendStatusUpdate();
 			initSent = true;
 		}
 
