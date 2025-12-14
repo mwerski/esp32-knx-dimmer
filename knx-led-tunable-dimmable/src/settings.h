@@ -8,7 +8,7 @@
 // #define STAT_LED_GN 2 //green onboard LED
 // #define STAT_LED_RD 5 //red onboard LED
 
-#define LED_PIN_CW 19
-#define LED_PIN_WW 18
 #define CCT_MODE NORMAL
 #define WHITE_LED_RGB_EQUIVALENT {255, 198, 175} // About 4200 Kelvin -24 green
+
+#define DEBUG true
