@@ -18255,7 +18255,7 @@
     "IsParameterRefAuto": true,
     "IsComObjectRefAuto": true,
     "IsUnionActive": false,
-    "IsModulesActive": true,
+    "IsModulesActive": false,
     "IsMessagesActive": false,
     "IsMemSizeAuto": true,
     "IsHelpActive": false,
