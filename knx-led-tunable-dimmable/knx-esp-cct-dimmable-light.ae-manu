@@ -13659,16 +13659,7 @@
       }
     ],
     "Helptexts": [],
-    "Allocators": [
-      {
-        "$type": "Kaenx.Creator.Models.Allocator, Kaenx.Creator.Share",
-        "UId": 1,
-        "Id": 1,
-        "Name": "allocParam",
-        "Start": 87,
-        "Max": 127
-      }
-    ],
+    "Allocators": [],
     "OpenKnxModules": [],
     "Dynamics": [
       {
