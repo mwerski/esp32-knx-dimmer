@@ -23,6 +23,14 @@
     #error "Wrong hardware. Not ESP32, ESP8266 or LIBRETINY"
 #endif
 
+#ifndef USE_WIFIMANAGER
+	#define USE_WIFIMANAGER 0
+#endif
+
+#if USE_WIFIMANAGER
+	#include <WiFiManager.h>
+#endif
+
 // ----------------------------------------------------
 // Global state
 // ----------------------------------------------------
@@ -90,6 +98,7 @@ void responseColorRgbCallback_L1(rgb_t value);
 // ----------------------------------------------------
 static inline void sep();
 static inline void printActive(uint8_t ch, const char* type, uint32_t active);
+static bool connectWifi(const char* hostname, const char* ssid, const char* pass, uint32_t portalTimeoutSec);
 
 // ----------------------------------------------------
 // Light setup helpers

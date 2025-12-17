@@ -648,7 +648,35 @@ static void setupLightsFromEts() {
   }
 }
 
+// WiFi helper
+static inline bool connectWifi(const char* hostname, const char* ssid, const char* pass, uint32_t portalTimeoutSec = 180) {
+	#if defined(ESP8266) || defined(ESP32)
+	WiFi.persistent(false);
+	WiFi.disconnect(true);
+	#endif
+	WiFi.mode(WIFI_STA);
+	WiFi.hostname(hostname);
+	//WiFi.setAutoConnect(true);
+	//WiFi.setAutoReconnect(true);
 
+	#if USE_WIFIMANAGER
+	WiFiManager wm;
+	wm.setConfigPortalTimeout(380); // Sekunden
+	// wm.setHostname(hostname); // nur aktivieren, wenn dein Build das unterstützt
+	bool ok = wm.autoConnect(hostname, WM_PASS);
+	if (!ok) ESP.restart();
+	return ok;
+	#else
+	WiFi.begin(ssid, pass);
+	const uint32_t start = millis();
+	const uint32_t timeoutMs = 20000;
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		if ((uint32_t)(millis() - start) >= timeoutMs) ESP.restart();
+	}
+	return true;
+	#endif
+}
 
 
 void setup() {
@@ -702,6 +730,8 @@ void setup() {
 	digitalWrite(STAT_LED_RD, STAT_LED_OFF);
 	#endif
 
+	!connectWifi(HOSTNAME, WIFI_SSID, WIFI_PASS, 180);
+	/*
 	#if defined(ESP8266) || defined(ESP32)
 	WiFi.persistent(false); // Solve possible wifi init errors
 	WiFi.disconnect(true);  // Delete SDK wifi config
@@ -719,6 +749,7 @@ void setup() {
 		// however an open AP can be a security issue
 		// settingsAP();
 	}
+	*/
 
 	// Setup and start KNX stack
 	setKnxHostname(HOSTNAME);
