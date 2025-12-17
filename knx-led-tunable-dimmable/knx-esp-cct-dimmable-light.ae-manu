@@ -1,6 +1,6 @@
 {
   "$type": "Kaenx.Creator.Models.MainModel, Kaenx.Creator.Share",
-  "ProjectName": "knx-esp-cct-dimmable-light",
+  "ProjectName": "knx-esp32-pwm-dimmer",
   "Guid": "62d84416-e390-4228-a530-249b2bea5c80",
   "FileName": "knx-esp-cct-dimmable-light",
   "Info": {
@@ -18324,7 +18324,7 @@
               "Items": [
                 {
                   "$type": "Kaenx.Creator.Models.CatalogItem, Kaenx.Creator.Share",
-                  "Name": "ESP32 CCT/Dimmable Light",
+                  "Name": "ESP32 PWM Dimmer",
                   "Number": "1",
                   "IsSection": false,
                   "Text": [
