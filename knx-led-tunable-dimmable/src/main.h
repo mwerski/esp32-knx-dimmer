@@ -38,7 +38,6 @@
 // ----------------------------------------------------
 extern bool knxConfigOk;
 extern bool initSent;
-extern unsigned long lastHeartbeat;
 
 // ----------------------------------------------------
 // Lights
@@ -94,6 +93,11 @@ void responseTemperatureCallback_L2(uint16_t value);
 // ----------------------------------------------------
 void responseColorHsvCallback_L1(hsv_t value);
 void responseColorRgbCallback_L1(rgb_t value);
+
+// ----------------------------------------------------
+// Misc KNX routines
+// ----------------------------------------------------
+void sendHeartbeat();
 
 // ----------------------------------------------------
 // Helper / Utils
