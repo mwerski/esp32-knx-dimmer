@@ -160,12 +160,12 @@
 #define APP_CH5_BrightnessNight		0x0049
 // Offset: 73, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Nacht
 #define ParamAPP_CH5_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH5_BrightnessNight))))
-//!< Number: 0, Text: Zentral, Function: Tag/Nacht
-#define APP_KoGeneralDayNight 0
-#define KoAPP_GeneralDayNight knx.getGroupObject(APP_KoGeneralDayNight)
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)
+//!< Number: 2, Text: Zentral, Function: Tag/Nacht
+#define APP_KoGeneralDayNight 2
+#define KoAPP_GeneralDayNight knx.getGroupObject(APP_KoGeneralDayNight)
 //!< Number: 20, Text: Kanal 1, Function: Schalten
 #define APP_KoCH1_Schalten 20
 #define KoAPP_CH1_Schalten knx.getGroupObject(APP_KoCH1_Schalten)
