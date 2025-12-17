@@ -11,16 +11,17 @@
 #include <esp-knx-led.h>
 
 #if defined(ESP32)
-    #include <WiFi.h>
-    #include <mDNS.h>
+	#include <WiFi.h>
+	#include <mDNS.h>
+	#include <nvs_flash.h>
 #elif defined(ESP8266)
-    #include <ESP8266WiFi.h>
-    #include <ESP8266mDNS.h>
+	#include <ESP8266WiFi.h>
+	#include <ESP8266mDNS.h>
 #elif defined(LIBRETINY)
-    #include <WiFi.h>
-    #include <mDNS.h>
+	#include <WiFi.h>
+	#include <mDNS.h>
 #else
-    #error "Wrong hardware. Not ESP32, ESP8266 or LIBRETINY"
+	#error "Wrong hardware. Not ESP32, ESP8266 or LIBRETINY"
 #endif
 
 #ifndef USE_WIFIMANAGER
@@ -29,6 +30,7 @@
 
 #if USE_WIFIMANAGER
 	#include <WiFiManager.h>
+	WiFiManager wm;
 #endif
 
 // ----------------------------------------------------
@@ -96,15 +98,4 @@ void responseColorRgbCallback_L1(rgb_t value);
 // ----------------------------------------------------
 // Helper / Utils
 // ----------------------------------------------------
-static inline void sep();
-static inline void printActive(uint8_t ch, const char* type, uint32_t active);
-static bool connectWifi(const char* hostname, const char* ssid, const char* pass, uint32_t portalTimeoutSec);
-
-// ----------------------------------------------------
-// Light setup helpers
-// ----------------------------------------------------
-static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin);
-static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin);
-static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t wPin);
-static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin);
-static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t cwPin, uint8_t wwPin);
+void factoryReset();

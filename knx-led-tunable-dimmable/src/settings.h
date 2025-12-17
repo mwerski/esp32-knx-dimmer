@@ -2,6 +2,8 @@
 
 #define MIN_CYCLE_TIME 5000 //ms
 
+#define ERASE_BTN 0 // GPIO to erase ESP flash
+
 #define STAT_LED_OFF HIGH
 #define STAT_LED_ON LOW
 
