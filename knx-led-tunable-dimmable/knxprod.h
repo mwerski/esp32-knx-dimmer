@@ -25,7 +25,7 @@
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
 #define MAIN_ApplicationVersion 0x01
-#define MAIN_OrderNumber "DOM-WLE-ACLE"
+#define MAIN_OrderNumber "YLDL01YL"
 #define MAIN_ParameterSize 74
 #define MAIN_MaxKoNumber 201
 
