@@ -114,27 +114,32 @@ void knxCallback(GroupObject &go) {
 			rgb_t rgb;
 			rgb.fromDPT232600(go.value(DPT_Colour_RGB));
 			Light1.setRgb(rgb);
+			break;
 		}
 
 		case APP_KoCH1_HueAbsolute: {
 			hsv_t hsv = Light1.getHsv();
 			hsv.h = go.value(DPT_Percent_U8);
 			Light1.setHsv(hsv);
+			break;
 		}
 		case APP_KoCH1_HueRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light1.setRelHueCmd(dimCmd);
+			break;
 		}
 		case APP_KoCH1_SaturationAbsolute: {
 			hsv_t hsv = Light1.getHsv();
-			hsv.h = go.value(DPT_Percent_U8);
+			hsv.s = go.value(DPT_Percent_U8);
 			Light1.setHsv(hsv);
+			break;
 		}
 		case APP_KoCH1_SaturationRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light1.setRelSaturationCmd(dimCmd);
+			break;
 		}
 	}
 }
