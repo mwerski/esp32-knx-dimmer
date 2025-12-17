@@ -8,3 +8,6 @@ const char *HOSTNAME = "ESP-KNX-Device";
 //Webserver login. Disable by setting user to ""
 const char *WWW_USER = "user";
 const char *WWW_PASS = "pass";
+
+//WiFiManager portal password
+const char *WM_PASS = "portalpass";

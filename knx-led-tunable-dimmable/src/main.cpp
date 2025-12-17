@@ -648,8 +648,71 @@ static void setupLightsFromEts() {
   }
 }
 
+// WiFi helper
+static inline bool connectWifi(const char* hostname, const char* ssid, const char* pass, uint32_t portalTimeoutSec = 180) {
+	WiFi.persistent(true);
+	WiFi.mode(WIFI_STA);
+	WiFi.hostname(hostname);
 
+	#if USE_WIFIMANAGER
+	//WiFiManager wm;
+	wm.setConfigPortalTimeout(portalTimeoutSec); // Sekunden
+	// wm.setHostname(hostname); // nur aktivieren, wenn dein Build das unterstützt
+	bool ok = wm.autoConnect(hostname, WM_PASS);
+	// if (!ok) ESP.restart();
+	return ok;
+	#else
+	#if defined(ESP8266) || defined(ESP32)
+	WiFi.disconnect(true);
+	#endif
+	//WiFi.setAutoConnect(true);
+	//WiFi.setAutoReconnect(true);
+	WiFi.begin(ssid, pass);
+	const uint32_t start = millis();
+	const uint32_t timeoutMs = 20000;
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		// if ((uint32_t)(millis() - start) >= timeoutMs) ESP.restart();
+		// Implement AP mode here after timeout if needed
+		// however an open AP can be a security issue
+		// settingsAP();
+	}
+	return true;
+	#endif
+}
 
+// GPIO helper
+static inline bool gpioLowForMs(uint8_t pin, uint32_t holdMs) {
+	static uint32_t lowStartMs = 0;
+	static bool triggered = false;
+	if (digitalRead(pin) == LOW) {
+		if (lowStartMs == 0) lowStartMs = millis();
+		if (!triggered && (uint32_t)(millis() - lowStartMs) >= holdMs) {
+			triggered = true;
+			return true;   // ✅ Aktion auslösen
+		}
+	} else {
+		// Reset sobald Pin wieder HIGH
+		lowStartMs = 0;
+		triggered = false;
+	}
+	return false;
+}
+
+// Erase Flash helper
+void factoryReset() {
+	#if USE_WIFIMANAGER
+	wm.resetSettings();
+	#endif
+	#if defined(ESP32)
+	nvs_flash_erase();
+	nvs_flash_init();
+	ESP.restart();
+	#elif defined(ESP8266)
+	ESP.eraseFlash();
+	ESP.restart();
+	#endif
+}
 
 void setup() {
 	startMs = millis();
@@ -658,7 +721,10 @@ void setup() {
 	#else
 	Serial.begin(115200);
 	#endif
-
+	#ifdef ERASE_BTN
+	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
+	#endif
+	
 	// set correct hardware type for flash compatibility check
 	setFirmwareVersion(MAIN_OpenKnxId, MAIN_ApplicationNumber, MAIN_ApplicationVersion);
 
@@ -702,23 +768,7 @@ void setup() {
 	digitalWrite(STAT_LED_RD, STAT_LED_OFF);
 	#endif
 
-	#if defined(ESP8266) || defined(ESP32)
-	WiFi.persistent(false); // Solve possible wifi init errors
-	WiFi.disconnect(true);  // Delete SDK wifi config
-	#endif
-
-	WiFi.mode(WIFI_STA);
-	WiFi.hostname(HOSTNAME);
-	//WiFi.setAutoConnect(true);
-	//WiFi.setAutoReconnect(true);
-	WiFi.begin(WIFI_SSID, WIFI_PASS);
-	WiFi.hostname(HOSTNAME); // Set hostname twice
-	while (WiFi.status() != WL_CONNECTED) {
-		delay(500);
-		// Implement AP mode here after timeout if needed
-		// however an open AP can be a security issue
-		// settingsAP();
-	}
+	connectWifi(HOSTNAME, WIFI_SSID, WIFI_PASS, 300);
 
 	// Setup and start KNX stack
 	setKnxHostname(HOSTNAME);
@@ -745,6 +795,10 @@ void setup() {
 
 void loop() {
 	uint32_t currentMillis = millis();
+
+	#ifdef ERASE_BTN
+	if (gpioLowForMs(ERASE_BTN, 5000)) factoryReset();
+	#endif
 
 	if (WiFi.status() == WL_CONNECTED) {
 		knxWebServ.loop();
