@@ -18234,10 +18234,10 @@
     "NamespaceVersion": 20,
     "DefaultLanguage": "de-DE",
     "DefaultLanguageIndex": 0,
-    "Name": "knx-esp-cct-dimmable-light",
+    "Name": "knx-esp32-pwm-dimmer",
     "ReplacesVersions": null,
     "Script": "",
-    "NameText": "V 0.1 knx-esp-cct-dimmable-light",
+    "NameText": "V 0.1 knx-esp32-pwm-dimmer",
     "Text": [
       {
         "$type": "Kaenx.Creator.Models.Translation, Kaenx.Creator.Share",
@@ -18246,8 +18246,8 @@
           "CultureCode": "de-DE",
           "Text": "Deutsch"
         },
-        "Text": "knx-esp-cct-dimmable-light",
-        "Preview": "knx-esp-cct-dimmable-light"
+        "Text": "knx-esp32-pwm-dimmer",
+        "Preview": "knx-esp32-pwm-dimmer"
       }
     ],
     "Number": 1,
