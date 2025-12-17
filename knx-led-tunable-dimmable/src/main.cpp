@@ -11,6 +11,8 @@ bool initSent = false;
 KnxWebserver knxWebServ = KnxWebserver();
 static uint32_t startMs = millis();
 static uint32_t startUpDelay = 0;
+static uint32_t heartbeatLastMs = 0;
+
 
 // callback from knx value change
 void knxCallback(GroupObject &go) {
@@ -112,27 +114,32 @@ void knxCallback(GroupObject &go) {
 			rgb_t rgb;
 			rgb.fromDPT232600(go.value(DPT_Colour_RGB));
 			Light1.setRgb(rgb);
+			break;
 		}
 
 		case APP_KoCH1_HueAbsolute: {
 			hsv_t hsv = Light1.getHsv();
 			hsv.h = go.value(DPT_Percent_U8);
 			Light1.setHsv(hsv);
+			break;
 		}
 		case APP_KoCH1_HueRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light1.setRelHueCmd(dimCmd);
+			break;
 		}
 		case APP_KoCH1_SaturationAbsolute: {
 			hsv_t hsv = Light1.getHsv();
-			hsv.h = go.value(DPT_Percent_U8);
+			hsv.s = go.value(DPT_Percent_U8);
 			Light1.setHsv(hsv);
+			break;
 		}
 		case APP_KoCH1_SaturationRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light1.setRelSaturationCmd(dimCmd);
+			break;
 		}
 	}
 }
@@ -195,6 +202,10 @@ void responseColorHsvCallback_L1(hsv_t value) {
 
 void responseColorRgbCallback_L1(rgb_t value) {
 	if (ParamAPP_CH1_Active) KoAPP_CH1_StatusRGB.value(value.toDPT232600(), DPT_Colour_RGB);
+}
+
+void sendHeartbeat() {
+	KoAPP_Heartbeat.value(true, DPT_State);
 }
 
 static inline void sep() {
@@ -714,6 +725,18 @@ void factoryReset() {
 	#endif
 }
 
+// Heartbeat helper
+static inline void handleHeartbeat() {
+	uint32_t intervalSec = ParamAPP_Heartbeat;
+	if (intervalSec == 0) return;   // Heartbeat deaktiviert
+	uint32_t intervalMs = intervalSec * 1000UL;
+	uint32_t now = millis();
+	if ( ((uint32_t)(now - heartbeatLastMs) >= intervalMs) || (heartbeatLastMs == 0) ) {
+		heartbeatLastMs = now;
+		sendHeartbeat();
+	}
+}
+
 void setup() {
 	startMs = millis();
 	#ifdef ESP8266
@@ -810,6 +833,8 @@ void loop() {
 
 		// startup delay
 		if ( (currentMillis - startMs) < startUpDelay) return;
+
+		handleHeartbeat();
 
 		if (!initSent) {
 			if (ParamAPP_CH1_Active) Light1.sendStatusUpdate();
