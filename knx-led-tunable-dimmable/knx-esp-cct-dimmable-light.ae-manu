@@ -13759,6 +13759,13 @@
                     "Name": "",
                     "ComObjectRef": 1,
                     "Items": null
+                  },
+                  {
+                    "$type": "Kaenx.Creator.Models.Dynamic.DynComObject, Kaenx.Creator.Share",
+                    "IsExpanded": false,
+                    "Name": "",
+                    "ComObjectRef": 2,
+                    "Items": null
                   }
                 ],
                 "Rows": [],
