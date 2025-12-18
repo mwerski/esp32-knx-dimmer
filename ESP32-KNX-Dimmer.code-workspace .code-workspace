@@ -21,8 +21,8 @@
 			"path": "knx-led-tunable"
 		},
 		{
-			"name": "knx-led-tunable-dimmable",
-			"path": "knx-led-tunable-dimmable"
+			"name": "knx-led-universal-5ch-esp32",
+			"path": "knx-led-universal-5ch-esp32"
 		},
 		{
 			"name": "libraries",
