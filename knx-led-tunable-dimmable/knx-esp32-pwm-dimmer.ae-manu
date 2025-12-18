@@ -2,7 +2,7 @@
   "$type": "Kaenx.Creator.Models.MainModel, Kaenx.Creator.Share",
   "ProjectName": "knx-esp32-pwm-dimmer",
   "Guid": "62d84416-e390-4228-a530-249b2bea5c80",
-  "FileName": "knx-esp-cct-dimmable-light",
+  "FileName": "knx-esp32-pwm-dimmer",
   "Info": {
     "$type": "Kaenx.Creator.Models.Info, Kaenx.Creator.Share",
     "Name": "ESP32 PWM Dimmer (DOMRAEM)",
@@ -19581,8 +19581,8 @@
                               "CultureCode": "de-DE",
                               "Text": "Deutsch"
                             },
-                            "Text": "Kanal 4 (DIM)",
-                            "Preview": "Kanal 4 (DIM)"
+                            "Text": "Kanal 5 (DIM)",
+                            "Preview": "Kanal 5 (DIM)"
                           }
                         ],
                         "TranslationText": false,
