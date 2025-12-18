@@ -295,10 +295,25 @@ static inline hsv_t chDefHsv(uint8_t ch) {
 }
 
 // light setup functions
+static inline void applyFadeSpeed(KnxLed& L, uint8_t ch) {
+	uint8_t up = 0, down = 0, color = 0;
+	switch (ch) {
+		case 1: up = ParamAPP_CH1_FadeUpSpeed; down = ParamAPP_CH1_FadeDownSpeed; color = ParamAPP_CH1_FadeColorSpeed; break;
+		case 2: up = ParamAPP_CH2_FadeUpSpeed; down = ParamAPP_CH2_FadeDownSpeed; color = ParamAPP_CH2_FadeColorSpeed; break;
+		// kein Colorfade fuer DIM lights, setze ColorFade auf UpFade
+		case 3: up = ParamAPP_CH3_FadeUpSpeed; down = ParamAPP_CH3_FadeDownSpeed; color = up; break;
+		case 4: up = ParamAPP_CH4_FadeUpSpeed; down = ParamAPP_CH4_FadeDownSpeed; color = up; break;
+		case 5: up = ParamAPP_CH5_FadeUpSpeed; down = ParamAPP_CH5_FadeDownSpeed; color = up; break;
+		default: return;
+	}
+	L.configFadeSpeed(up, down, color);
+}
+
 static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t cwPin, uint8_t wwPin) {
   printActive(ch, "RGBCCT", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
+	applyFadeSpeed(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
@@ -320,6 +335,7 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   printActive(ch, "RGBW", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
+	applyFadeSpeed(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
@@ -341,6 +357,7 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   printActive(ch, "RGB", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
+	applyFadeSpeed(L, ch);
   L.configDefaultBrightness(chBrightnessDay(ch));
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
@@ -362,6 +379,7 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   printActive(ch, "CCT", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
+	applyFadeSpeed(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
@@ -380,6 +398,7 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
   printActive(ch, "DIM", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
 	L.configDimSpeed(chDimSpeed(ch));
+	applyFadeSpeed(L, ch);
   L.configDefaultBrightness(chBrightnessDay(ch));
   L.initDimmableLight(pwmPin);
 	#ifdef DEBUG
