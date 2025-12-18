@@ -24,9 +24,9 @@
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
-#define MAIN_ApplicationVersion 0x01
-#define MAIN_OrderNumber "YLDL01YL"
-#define MAIN_ParameterSize 74
+#define MAIN_ApplicationVersion 0x02
+#define MAIN_OrderNumber "DOM-WLE-ACLE"
+#define MAIN_ParameterSize 86
 #define MAIN_MaxKoNumber 201
 
 
@@ -83,83 +83,119 @@
 // Offset: 38, BitOffset: 4, Size: 1 Bit, Text: Kanal 1 aktiv
 #define ParamAPP_CH1_Active knx.paramBit(APP_CH1_Active, 4)
 #define APP_CH1_DimSpeed		0x002C
-// Offset: 44, Size: 8 Bit (1 Byte), Text: Kanal 1 Dimmgeschwindigkeit
+// Offset: 44, Size: 8 Bit (1 Byte), Text: Kanal 1 Dimmgeschwindigkeit (relativ)
 #define ParamAPP_CH1_DimSpeed ((uint32_t)((knx.paramByte(APP_CH1_DimSpeed))))
-#define APP_CH1_BrightnessDay		0x002D
-// Offset: 45, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Tag
+#define APP_CH1_FadeUpSpeed		0x002D
+// Offset: 45, Size: 8 Bit (1 Byte), Text: Kanal 1 Überblendzeit (Auf)
+#define ParamAPP_CH1_FadeUpSpeed ((uint32_t)((knx.paramByte(APP_CH1_FadeUpSpeed))))
+#define APP_CH1_FadeDownSpeed		0x002E
+// Offset: 46, Size: 8 Bit (1 Byte), Text: Kanal 1 Überblendzeit (Ab)
+#define ParamAPP_CH1_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH1_FadeDownSpeed))))
+#define APP_CH1_FadeColorSpeed		0x002F
+// Offset: 47, Size: 8 Bit (1 Byte), Text: Kanal 1 Überblendzeit (Farbe)
+#define ParamAPP_CH1_FadeColorSpeed ((uint32_t)((knx.paramByte(APP_CH1_FadeColorSpeed))))
+#define APP_CH1_BrightnessDay		0x0030
+// Offset: 48, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Tag
 #define ParamAPP_CH1_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH1_BrightnessDay))))
-#define APP_CH1_BrightnessNight		0x002E
-// Offset: 46, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Nacht
+#define APP_CH1_BrightnessNight		0x0031
+// Offset: 49, Size: 8 Bit (1 Byte), Text: Kanal 1 Einschalthelligkeit Nacht
 #define ParamAPP_CH1_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH1_BrightnessNight))))
-#define APP_CH1_DefaultColorTemp		0x002F
-// Offset: 47, Size: 16 Bit (2 Byte), Text: Kanal 1 Einschaltfarbtemperatur
+#define APP_CH1_DefaultColorTemp		0x0032
+// Offset: 50, Size: 16 Bit (2 Byte), Text: Kanal 1 Einschaltfarbtemperatur
 #define ParamAPP_CH1_DefaultColorTemp ((uint32_t)((knx.paramWord(APP_CH1_DefaultColorTemp))))
-#define APP_CH1_MinColorTemp		0x0031
-// Offset: 49, Size: 16 Bit (2 Byte), Text: Kanal 1 Minimale Farbtemperatur
+#define APP_CH1_MinColorTemp		0x0034
+// Offset: 52, Size: 16 Bit (2 Byte), Text: Kanal 1 Minimale Farbtemperatur
 #define ParamAPP_CH1_MinColorTemp ((uint32_t)((knx.paramWord(APP_CH1_MinColorTemp))))
-#define APP_CH1_MaxColorTemp		0x0033
-// Offset: 51, Size: 16 Bit (2 Byte), Text: Kanal 1 Maximale Farbtemperatur
+#define APP_CH1_MaxColorTemp		0x0036
+// Offset: 54, Size: 16 Bit (2 Byte), Text: Kanal 1 Maximale Farbtemperatur
 #define ParamAPP_CH1_MaxColorTemp ((uint32_t)((knx.paramWord(APP_CH1_MaxColorTemp))))
-#define APP_CH1_DefaultColor		0x0035
-// Offset: 53, Size: 24 Bit (3 Byte), Text: Kanal 1 Einschaltfarbe
+#define APP_CH1_DefaultColor		0x0038
+// Offset: 56, Size: 24 Bit (3 Byte), Text: Kanal 1 Einschaltfarbe
 #define ParamAPP_CH1_DefaultColor knx.paramData(APP_CH1_DefaultColor)
 #define APP_CH2_Active		0x0026
 // Offset: 38, BitOffset: 5, Size: 1 Bit, Text: Kanal 2 aktiv
 #define ParamAPP_CH2_Active knx.paramBit(APP_CH2_Active, 5)
-#define APP_CH2_DimSpeed		0x0038
-// Offset: 56, Size: 8 Bit (1 Byte), Text: Kanal 2 Dimmgeschwindigkeit
+#define APP_CH2_DimSpeed		0x003B
+// Offset: 59, Size: 8 Bit (1 Byte), Text: Kanal 2 Dimmgeschwindigkeit (relativ)
 #define ParamAPP_CH2_DimSpeed ((uint32_t)((knx.paramByte(APP_CH2_DimSpeed))))
-#define APP_CH2_BrightnessDay		0x0039
-// Offset: 57, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Tag
+#define APP_CH2_FadeUpSpeed		0x003C
+// Offset: 60, Size: 8 Bit (1 Byte), Text: Kanal 2 Überblendzeit (Auf)
+#define ParamAPP_CH2_FadeUpSpeed ((uint32_t)((knx.paramByte(APP_CH2_FadeUpSpeed))))
+#define APP_CH2_FadeDownSpeed		0x003D
+// Offset: 61, Size: 8 Bit (1 Byte), Text: Kanal 2 Überblendzeit (Ab)
+#define ParamAPP_CH2_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH2_FadeDownSpeed))))
+#define APP_CH2_FadeColorSpeed		0x003E
+// Offset: 62, Size: 8 Bit (1 Byte), Text: Kanal 2 Überblendzeit (Farbe)
+#define ParamAPP_CH2_FadeColorSpeed ((uint32_t)((knx.paramByte(APP_CH2_FadeColorSpeed))))
+#define APP_CH2_BrightnessDay		0x003F
+// Offset: 63, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Tag
 #define ParamAPP_CH2_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH2_BrightnessDay))))
-#define APP_CH2_BrightnessNight		0x003A
-// Offset: 58, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Nacht
+#define APP_CH2_BrightnessNight		0x0040
+// Offset: 64, Size: 8 Bit (1 Byte), Text: Kanal 2 Einschalthelligkeit Nacht
 #define ParamAPP_CH2_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH2_BrightnessNight))))
-#define APP_CH2_DefaultColorTemp		0x003B
-// Offset: 59, Size: 16 Bit (2 Byte), Text: Kanal 2 Einschaltfarbtemperatur
+#define APP_CH2_DefaultColorTemp		0x0041
+// Offset: 65, Size: 16 Bit (2 Byte), Text: Kanal 2 Einschaltfarbtemperatur
 #define ParamAPP_CH2_DefaultColorTemp ((uint32_t)((knx.paramWord(APP_CH2_DefaultColorTemp))))
-#define APP_CH2_MinColorTemp		0x003D
-// Offset: 61, Size: 16 Bit (2 Byte), Text: Kanal 2 Minimale Farbtemperatur
+#define APP_CH2_MinColorTemp		0x0043
+// Offset: 67, Size: 16 Bit (2 Byte), Text: Kanal 2 Minimale Farbtemperatur
 #define ParamAPP_CH2_MinColorTemp ((uint32_t)((knx.paramWord(APP_CH2_MinColorTemp))))
-#define APP_CH2_MaxColorTemp		0x003F
-// Offset: 63, Size: 16 Bit (2 Byte), Text: Kanal 2 Maximale Farbtemperatur
+#define APP_CH2_MaxColorTemp		0x0045
+// Offset: 69, Size: 16 Bit (2 Byte), Text: Kanal 2 Maximale Farbtemperatur
 #define ParamAPP_CH2_MaxColorTemp ((uint32_t)((knx.paramWord(APP_CH2_MaxColorTemp))))
 #define APP_CH3_Active		0x0026
 // Offset: 38, BitOffset: 6, Size: 1 Bit, Text: Kanal 3 aktiv
 #define ParamAPP_CH3_Active knx.paramBit(APP_CH3_Active, 6)
-#define APP_CH3_DimSpeed		0x0041
-// Offset: 65, Size: 8 Bit (1 Byte), Text: Kanal 3 Dimmgeschwindigkeit
+#define APP_CH3_DimSpeed		0x0047
+// Offset: 71, Size: 8 Bit (1 Byte), Text: Kanal 3 Dimmgeschwindigkeit (relativ)
 #define ParamAPP_CH3_DimSpeed ((uint32_t)((knx.paramByte(APP_CH3_DimSpeed))))
-#define APP_CH3_BrightnessDay		0x0042
-// Offset: 66, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Tag
+#define APP_CH3_FadeUpSpeed		0x0048
+// Offset: 72, Size: 8 Bit (1 Byte), Text: Kanal 3 Überblendzeit (Auf)
+#define ParamAPP_CH3_FadeUpSpeed ((uint32_t)((knx.paramByte(APP_CH3_FadeUpSpeed))))
+#define APP_CH3_FadeDownSpeed		0x0049
+// Offset: 73, Size: 8 Bit (1 Byte), Text: Kanal 3 Überblendzeit (Ab)
+#define ParamAPP_CH3_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH3_FadeDownSpeed))))
+#define APP_CH3_BrightnessDay		0x004A
+// Offset: 74, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Tag
 #define ParamAPP_CH3_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH3_BrightnessDay))))
-#define APP_CH3_BrightnessNight		0x0043
-// Offset: 67, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Nacht
+#define APP_CH3_BrightnessNight		0x004B
+// Offset: 75, Size: 8 Bit (1 Byte), Text: Kanal 3 Einschalthelligkeit Nacht
 #define ParamAPP_CH3_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH3_BrightnessNight))))
 #define APP_CH4_Active		0x0026
 // Offset: 38, BitOffset: 7, Size: 1 Bit, Text: Kanal 4 aktiv
 #define ParamAPP_CH4_Active knx.paramBit(APP_CH4_Active, 7)
-#define APP_CH4_DimSpeed		0x0044
-// Offset: 68, Size: 8 Bit (1 Byte), Text: Kanal 4 Dimmgeschwindigkeit
+#define APP_CH4_DimSpeed		0x004C
+// Offset: 76, Size: 8 Bit (1 Byte), Text: Kanal 4 Dimmgeschwindigkeit (relativ)
 #define ParamAPP_CH4_DimSpeed ((uint32_t)((knx.paramByte(APP_CH4_DimSpeed))))
-#define APP_CH4_BrightnessDay		0x0045
-// Offset: 69, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Tag
+#define APP_CH4_FadeUpSpeed		0x004D
+// Offset: 77, Size: 8 Bit (1 Byte), Text: Kanal 4 Überblendzeit (Auf)
+#define ParamAPP_CH4_FadeUpSpeed ((uint32_t)((knx.paramByte(APP_CH4_FadeUpSpeed))))
+#define APP_CH4_FadeDownSpeed		0x004E
+// Offset: 78, Size: 8 Bit (1 Byte), Text: Kanal 4 Überblendzeit (Ab)
+#define ParamAPP_CH4_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH4_FadeDownSpeed))))
+#define APP_CH4_BrightnessDay		0x004F
+// Offset: 79, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Tag
 #define ParamAPP_CH4_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH4_BrightnessDay))))
-#define APP_CH4_BrightnessNight		0x0046
-// Offset: 70, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Nacht
+#define APP_CH4_BrightnessNight		0x0050
+// Offset: 80, Size: 8 Bit (1 Byte), Text: Kanal 4 Einschalthelligkeit Nacht
 #define ParamAPP_CH4_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH4_BrightnessNight))))
 #define APP_CH5_Active		0x0027
 // Offset: 39, BitOffset: 6, Size: 1 Bit, Text: Kanal 5 aktiv
 #define ParamAPP_CH5_Active knx.paramBit(APP_CH5_Active, 6)
-#define APP_CH5_DimSpeed		0x0047
-// Offset: 71, Size: 8 Bit (1 Byte), Text: Kanal 5 Dimmgeschwindigkeit
+#define APP_CH5_DimSpeed		0x0051
+// Offset: 81, Size: 8 Bit (1 Byte), Text: Kanal 5 Dimmgeschwindigkeit (relativ)
 #define ParamAPP_CH5_DimSpeed ((uint32_t)((knx.paramByte(APP_CH5_DimSpeed))))
-#define APP_CH5_BrightnessDay		0x0048
-// Offset: 72, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Tag
+#define APP_CH5_BrightnessDay		0x0052
+// Offset: 82, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Tag
 #define ParamAPP_CH5_BrightnessDay ((uint32_t)((knx.paramByte(APP_CH5_BrightnessDay))))
-#define APP_CH5_BrightnessNight		0x0049
-// Offset: 73, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Nacht
+#define APP_CH5_BrightnessNight		0x0053
+// Offset: 83, Size: 8 Bit (1 Byte), Text: Kanal 5 Einschalthelligkeit Nacht
 #define ParamAPP_CH5_BrightnessNight ((uint32_t)((knx.paramByte(APP_CH5_BrightnessNight))))
+#define APP_CH5_FadeUpSpeed		0x0054
+// Offset: 84, Size: 8 Bit (1 Byte), Text: Kanal 5 Überblendzeit (Auf)
+#define ParamAPP_CH5_FadeUpSpeed ((uint32_t)((knx.paramByte(APP_CH5_FadeUpSpeed))))
+#define APP_CH5_FadeDownSpeed		0x0055
+// Offset: 85, Size: 8 Bit (1 Byte), Text: Kanal 5 Überblendzeit (Ab)
+#define ParamAPP_CH5_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH5_FadeDownSpeed))))
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)
