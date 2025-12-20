@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#define CPU_FREQ 160 // 160 should be sufficient, otherwise raise to 240
 #define MIN_CYCLE_TIME 5000 //ms
 
 #define ERASE_BTN 0 // GPIO to erase ESP flash

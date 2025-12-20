@@ -757,6 +757,7 @@ static inline void handleHeartbeat() {
 }
 
 void setup() {
+	setCpuFrequencyMhz(CPU_FREQ);
 	startMs = millis();
 	#ifdef ESP8266
 	Serial.begin(74880);
