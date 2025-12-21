@@ -14,4 +14,4 @@
 #define CCT_MODE NORMAL
 #define WHITE_LED_RGB_EQUIVALENT {255, 198, 175} // About 4200 Kelvin -24 green
 
-#define DEBUG true
+#define DEBUGGING true
