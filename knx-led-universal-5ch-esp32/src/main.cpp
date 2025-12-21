@@ -18,7 +18,7 @@ static uint32_t heartbeatLastMs = 0;
 void knxCallback(GroupObject &go) {
 	// callbacks are now handled in the class, not per instance,
 	// this means, we have to check, which GroupObject is calling back
-	#ifdef DEBUG
+	#ifdef DEBUGGING
 	Serial.print("KNX callback: ");
 	Serial.println(go.asap());
 	#endif
@@ -209,13 +209,13 @@ void sendHeartbeat() {
 }
 
 static inline void sep() {
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.println("--------------------------------------------------");
 	#endif
 }
 
 static inline void printActive(uint8_t ch, const char* type, uint32_t active) {
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.print("Channel "); Serial.print(ch);
   Serial.print(" ("); Serial.print(type); Serial.print(") active: ");
   Serial.println(active);
@@ -321,7 +321,7 @@ static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
   L.initRgbcctLight(rPin, gPin, bPin, cwPin, wwPin, CCT_MODE);
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Min CT: "); Serial.println(chMinCT(ch));
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
@@ -343,7 +343,7 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
   L.initRgbwLight(rPin, gPin, bPin, wPin, WHITE_LED_RGB_EQUIVALENT);
-	#ifdef DEBUG
+	#ifdef DEBUGGING
 	Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Min CT: "); Serial.println(chMinCT(ch));
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
@@ -365,7 +365,7 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
   L.initRgbLight(rPin, gPin, bPin);
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Min CT: "); Serial.println(chMinCT(ch));
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
@@ -385,7 +385,7 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   L.configDefaultTemperature(chDefCT(ch));
   L.configDefaultBrightness(chBrightnessDay(ch));
   L.initTunableWhiteLight(cwPin, wwPin, CCT_MODE);
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Min CT: "); Serial.println(chMinCT(ch));
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
@@ -401,14 +401,14 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
 	applyFadeSpeed(L, ch);
   L.configDefaultBrightness(chBrightnessDay(ch));
   L.initDimmableLight(pwmPin);
-	#ifdef DEBUG
+	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
 	#endif
 }
 
 static void setupLightsFromEts() {
-  #ifdef DEBUG
+  #ifdef DEBUGGING
 	sep();
 	#endif
 
@@ -422,7 +422,7 @@ static void setupLightsFromEts() {
   switch (ParamAPP_ChannelMode) {
 
     case PT_ChannelModes_RGBCCT: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: RGBCCT, 1 light");
 			sep();
 			#endif
@@ -434,14 +434,14 @@ static void setupLightsFromEts() {
         Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
         Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
       break;
     }
 
     case PT_ChannelModes_RGBW_D: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: RGBW_D, 2 lights");
 			sep();
 			#endif
@@ -453,7 +453,7 @@ static void setupLightsFromEts() {
         Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
         Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -462,14 +462,14 @@ static void setupLightsFromEts() {
         Light2.registerStatusCallback(statusCallback_L2);
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
       break;
     }
 
     case PT_ChannelModes_RGB_CCT: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: RGB_CCT, 2 lights");
 			sep();
 			#endif
@@ -480,7 +480,7 @@ static void setupLightsFromEts() {
         Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
         Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -490,14 +490,14 @@ static void setupLightsFromEts() {
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
         Light2.registerTemperatureCallback(responseTemperatureCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
       break;
     }
 
     case PT_ChannelModes_RGB_D_D: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: RGB_D_D, 3 lights");
 			sep();
 			#endif
@@ -509,7 +509,7 @@ static void setupLightsFromEts() {
         Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
         Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -518,7 +518,7 @@ static void setupLightsFromEts() {
         Light2.registerStatusCallback(statusCallback_L2);
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -527,7 +527,7 @@ static void setupLightsFromEts() {
         Light3.registerStatusCallback(statusCallback_L3);
         Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -535,7 +535,7 @@ static void setupLightsFromEts() {
     }
 
     case PT_ChannelModes_CCT_CCT_D: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: CCT_CCT_D, 3 lights");
 			sep();
 			#endif
@@ -545,7 +545,7 @@ static void setupLightsFromEts() {
         Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
         Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -555,7 +555,7 @@ static void setupLightsFromEts() {
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
         Light2.registerTemperatureCallback(responseTemperatureCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -564,7 +564,7 @@ static void setupLightsFromEts() {
         Light3.registerStatusCallback(statusCallback_L3);
         Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -572,7 +572,7 @@ static void setupLightsFromEts() {
     }
 
     case PT_ChannelModes_CCT_D_D_D: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: CCT_D_D_D, 4 lights");
 			sep();
 			#endif
@@ -582,7 +582,7 @@ static void setupLightsFromEts() {
         Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
         Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -591,7 +591,7 @@ static void setupLightsFromEts() {
         Light2.registerStatusCallback(statusCallback_L2);
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -600,7 +600,7 @@ static void setupLightsFromEts() {
         Light3.registerStatusCallback(statusCallback_L3);
         Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -609,7 +609,7 @@ static void setupLightsFromEts() {
         Light4.registerStatusCallback(statusCallback_L4);
         Light4.registerBrightnessCallback(responseBrightnessCallback_L4);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -617,7 +617,7 @@ static void setupLightsFromEts() {
     }
 
     case PT_ChannelModes_D_D_D_D_D: {
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Channel setup: D_D_D_D_D, 5 lights");
 			sep();
 			#endif
@@ -626,7 +626,7 @@ static void setupLightsFromEts() {
         Light1.registerStatusCallback(statusCallback_L1);
         Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -635,7 +635,7 @@ static void setupLightsFromEts() {
         Light2.registerStatusCallback(statusCallback_L2);
         Light2.registerBrightnessCallback(responseBrightnessCallback_L2);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -644,7 +644,7 @@ static void setupLightsFromEts() {
         Light3.registerStatusCallback(statusCallback_L3);
         Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -653,7 +653,7 @@ static void setupLightsFromEts() {
         Light4.registerStatusCallback(statusCallback_L4);
         Light4.registerBrightnessCallback(responseBrightnessCallback_L4);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -662,7 +662,7 @@ static void setupLightsFromEts() {
         Light5.registerStatusCallback(statusCallback_L5);
         Light5.registerBrightnessCallback(responseBrightnessCallback_L5);
       }
-			#ifdef DEBUG
+			#ifdef DEBUGGING
 			sep();
 			#endif
 
@@ -670,7 +670,7 @@ static void setupLightsFromEts() {
     }
 
     default:
-			#ifdef DEBUG
+			#ifdef DEBUGGING
       Serial.println("Unknown ChannelMode. No lights initialized.");
 			sep();
 			#endif
@@ -799,7 +799,7 @@ void setup() {
 	}
 	Serial.println(HOSTNAME);
 	Serial.println(getKnxPhysAddr());
-	#ifdef DEBUG
+	#ifdef DEBUGGING
 	Serial.print("StartUp Delay: "); Serial.print(startUpDelay); Serial.println("ms");
 	#endif
 
