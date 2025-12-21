@@ -767,6 +767,10 @@ void setup() {
 	#ifdef ERASE_BTN
 	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
 	#endif
+	#if PRODUCT == YLDL01YL
+	pinMode(22, OUTPUT);
+	digitalWrite(22,HIGH);	// should be changed later, so that power gets only applied if a light is active
+	#endif
 	
 	// set correct hardware type for flash compatibility check
 	setFirmwareVersion(MAIN_OpenKnxId, MAIN_ApplicationNumber, MAIN_ApplicationVersion);
