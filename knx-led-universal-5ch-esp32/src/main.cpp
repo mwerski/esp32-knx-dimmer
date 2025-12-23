@@ -768,6 +768,7 @@ void setup() {
 	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
 	#endif
 	#if PRODUCT == YLDL01YL
+	Serial.println("YLDL01YL mode, setting power to on");
 	pinMode(22, OUTPUT);
 	digitalWrite(22,HIGH);	// should be changed later, so that power gets only applied if a light is active
 	#endif
