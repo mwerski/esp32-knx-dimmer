@@ -24,9 +24,9 @@
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
-#define MAIN_ApplicationVersion 0x01
+#define MAIN_ApplicationVersion 0x02
 #define MAIN_OrderNumber "DLYL01YL"
-#define MAIN_ParameterSize 86
+#define MAIN_ParameterSize 106
 #define MAIN_MaxKoNumber 201
 
 
@@ -196,12 +196,63 @@
 #define APP_CH5_FadeDownSpeed		0x0055
 // Offset: 85, Size: 8 Bit (1 Byte), Text: Kanal 5 Überblendzeit (Ab)
 #define ParamAPP_CH5_FadeDownSpeed ((uint32_t)((knx.paramByte(APP_CH5_FadeDownSpeed))))
+#define APP_CH1_BrightnessMin		0x0056
+// Offset: 86, Size: 8 Bit (1 Byte), Text: AmbientLight Minimale Helligkeit
+#define ParamAPP_CH1_BrightnessMin ((uint32_t)((knx.paramByte(APP_CH1_BrightnessMin))))
+#define APP_CH1_BrightnessMax		0x0057
+// Offset: 87, Size: 8 Bit (1 Byte), Text: AmbientLight Maximale Helligkeit
+#define ParamAPP_CH1_BrightnessMax ((uint32_t)((knx.paramByte(APP_CH1_BrightnessMax))))
+#define APP_CH2_BrightnessMin		0x0058
+// Offset: 88, Size: 8 Bit (1 Byte), Text: DownLight Minimale Helligkeit
+#define ParamAPP_CH2_BrightnessMin ((uint32_t)((knx.paramByte(APP_CH2_BrightnessMin))))
+#define APP_CH2_BrightnessMax		0x0059
+// Offset: 89, Size: 8 Bit (1 Byte), Text: DownLight Maximale Helligkeit
+#define ParamAPP_CH2_BrightnessMax ((uint32_t)((knx.paramByte(APP_CH2_BrightnessMax))))
+#define APP_CH3_BrightnessMin		0x005A
+// Offset: 90, Size: 8 Bit (1 Byte), Text: NightLight Minimale Helligkeit
+#define ParamAPP_CH3_BrightnessMin ((uint32_t)((knx.paramByte(APP_CH3_BrightnessMin))))
+#define APP_CH3_BrightnessMax		0x005B
+// Offset: 91, Size: 8 Bit (1 Byte), Text: NightLight Maximale Helligkeit
+#define ParamAPP_CH3_BrightnessMax ((uint32_t)((knx.paramByte(APP_CH3_BrightnessMax))))
+#define APP_CH4_BrightnessMin		0x005C
+// Offset: 92, Size: 8 Bit (1 Byte), Text: Kanal 4 Minimale Helligkeit
+#define ParamAPP_CH4_BrightnessMin ((uint32_t)((knx.paramByte(APP_CH4_BrightnessMin))))
+#define APP_CH4_BrightnessMax		0x005D
+// Offset: 93, Size: 8 Bit (1 Byte), Text: Kanal 4 Maximale Helligkeit
+#define ParamAPP_CH4_BrightnessMax ((uint32_t)((knx.paramByte(APP_CH4_BrightnessMax))))
+#define APP_CH5_BrightnessMin		0x005E
+// Offset: 94, Size: 8 Bit (1 Byte), Text: Kanal 5 Minimale Helligkeit
+#define ParamAPP_CH5_BrightnessMin ((uint32_t)((knx.paramByte(APP_CH5_BrightnessMin))))
+#define APP_CH5_BrightnessMax		0x005F
+// Offset: 95, Size: 8 Bit (1 Byte), Text: Kanal 5 Maximale Helligkeit
+#define ParamAPP_CH5_BrightnessMax ((uint32_t)((knx.paramByte(APP_CH5_BrightnessMax))))
+#define APP_CH1_PWMFrequency		0x0060
+// Offset: 96, Size: 16 Bit (2 Byte), Text: Kanal 1 PWM Frequenz
+#define ParamAPP_CH1_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH1_PWMFrequency))))
+#define APP_CH2_PWMFrequency		0x0062
+// Offset: 98, Size: 16 Bit (2 Byte), Text: Kanal 2 PWM Frequenz
+#define ParamAPP_CH2_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH2_PWMFrequency))))
+#define APP_CH3_PWMFrequency		0x0064
+// Offset: 100, Size: 16 Bit (2 Byte), Text: Kanal 3 PWM Frequenz
+#define ParamAPP_CH3_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH3_PWMFrequency))))
+#define APP_CH4_PWMFrequency		0x0066
+// Offset: 102, Size: 16 Bit (2 Byte), Text: Kanal 4 PWM Frequenz
+#define ParamAPP_CH4_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH4_PWMFrequency))))
+#define APP_CH5_PWMFrequency		0x0068
+// Offset: 104, Size: 16 Bit (2 Byte), Text: Kanal 5 PWM Frequenz
+#define ParamAPP_CH5_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH5_PWMFrequency))))
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)
 //!< Number: 2, Text: Zentral, Function: Tag/Nacht
 #define APP_KoGeneralDayNight 2
 #define KoAPP_GeneralDayNight knx.getGroupObject(APP_KoGeneralDayNight)
+//!< Number: 3, Text: Zentral, Function: Power
+#define APP_KoGeneralPower 3
+#define KoAPP_GeneralPower knx.getGroupObject(APP_KoGeneralPower)
+//!< Number: 4, Text: Zentral, Function: Status
+#define APP_KoGeneralStatusPower 4
+#define KoAPP_GeneralStatusPower knx.getGroupObject(APP_KoGeneralStatusPower)
 //!< Number: 20, Text: AmbientLight, Function: Schalten
 #define APP_KoCH1_Schalten 20
 #define KoAPP_CH1_Schalten knx.getGroupObject(APP_KoCH1_Schalten)
