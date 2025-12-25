@@ -767,8 +767,8 @@ void setup() {
 	#ifdef ERASE_BTN
 	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
 	#endif
-	#if PRODUCT == YLDL01YL
-	Serial.println("YLDL01YL mode, setting power to on");
+	#if defined(PRODUCT) && (PRODUCT == YLDL01YL)
+	Serial.println("YLDL01YL mode, holding power GPIO high");
 	pinMode(22, OUTPUT);
 	digitalWrite(22,HIGH);	// should be changed later, so that power gets only applied if a light is active
 	#endif
@@ -798,6 +798,17 @@ void setup() {
 		HOSTNAME = (char *)knx.paramData(APP_Hostname);
 		// read channel setup and individual parameters from ETS config
 		setupLightsFromEts();
+		#if defined(PRODUCT) && (PRODUCT == YLDL01YL)
+		// static configuration of NightLight (l3)
+		setupDim(Light3, 3, 23);	// GPIO23, NightLight PWM
+		if (chActive(3) == PT_OnOff_Ein) {
+			Light3.registerStatusCallback(statusCallback_L3);
+			Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+		}
+		#ifdef DEBUGGING
+		sep();
+		#endif
+		#endif
 
 		startUpDelay = ParamAPP_StartUpDelay * 1000;
 
