@@ -2803,7 +2803,7 @@
         ],
         "TranslationText": false,
         "TranslationSuffix": false,
-        "Access": 2
+        "Access": 0
       },
       {
         "$type": "Kaenx.Creator.Models.Parameter, Kaenx.Creator.Share",
@@ -4759,8 +4759,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 1 Minimale Helligkeit",
-            "Preview": "Kanal 1 Minimale Helligkeit"
+            "Text": "AmbientLight Minimale Helligkeit",
+            "Preview": "AmbientLight Minimale Helligkeit"
           }
         ],
         "Suffix": [
@@ -4801,8 +4801,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 1 Maximale Helligkeit",
-            "Preview": "Kanal 1 Maximale Helligkeit"
+            "Text": "AmbientLight Maximale Helligkeit",
+            "Preview": "AmbientLight Maximale Helligkeit"
           }
         ],
         "Suffix": [
@@ -4843,8 +4843,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 2 Minimale Helligkeit",
-            "Preview": "Kanal 2 Minimale Helligkeit"
+            "Text": "DownLight Minimale Helligkeit",
+            "Preview": "DownLight Minimale Helligkeit"
           }
         ],
         "Suffix": [
@@ -4885,8 +4885,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 2 Maximale Helligkeit",
-            "Preview": "Kanal 2 Maximale Helligkeit"
+            "Text": "DownLight Maximale Helligkeit",
+            "Preview": "DownLight Maximale Helligkeit"
           }
         ],
         "Suffix": [
@@ -4927,8 +4927,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 3 Minimale Helligkeit",
-            "Preview": "Kanal 3 Minimale Helligkeit"
+            "Text": "NightLight Minimale Helligkeit",
+            "Preview": "NightLight Minimale Helligkeit"
           }
         ],
         "Suffix": [
@@ -4969,8 +4969,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Kanal 3 Maximale Helligkeit",
-            "Preview": "Kanal 3 Maximale Helligkeit"
+            "Text": "NightLight Maximale Helligkeit",
+            "Preview": "NightLight Maximale Helligkeit"
           }
         ],
         "Suffix": [
@@ -16350,7 +16350,7 @@
         "OverwriteFW": false,
         "FlagTrans": false,
         "OverwriteFT": false,
-        "FlagComm": true,
+        "FlagComm": false,
         "OverwriteFC": false,
         "FlagUpdate": false,
         "OverwriteFU": false,
@@ -16408,7 +16408,7 @@
         "OverwriteFW": false,
         "FlagTrans": false,
         "OverwriteFT": false,
-        "FlagComm": true,
+        "FlagComm": false,
         "OverwriteFC": false,
         "FlagUpdate": false,
         "OverwriteFU": false,
@@ -16759,6 +16759,32 @@
                             "HelpText": null
                           },
                           {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 51,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 52,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
                             "$type": "Kaenx.Creator.Models.Dynamic.DynSeparator, Kaenx.Creator.Share",
                             "IsExpanded": false,
                             "Id": 3,
@@ -16927,19 +16953,6 @@
                             "Name": "",
                             "ComObjectRef": 20,
                             "Items": null
-                          },
-                          {
-                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
-                            "IsExpanded": false,
-                            "Name": "",
-                            "ParameterRef": 0,
-                            "HasHelptext": false,
-                            "HelptextId": 0,
-                            "UseIcon": false,
-                            "IconId": -1,
-                            "Cell": null,
-                            "Items": null,
-                            "HelpText": null
                           }
                         ]
                       }
@@ -17182,6 +17195,32 @@
                             "IsExpanded": false,
                             "Name": "",
                             "ParameterRef": 23,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 53,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 54,
                             "HasHelptext": false,
                             "HelptextId": 0,
                             "UseIcon": false,
@@ -17514,6 +17553,32 @@
                             "HelpText": null
                           },
                           {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 55,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
+                            "$type": "Kaenx.Creator.Models.Dynamic.DynParameter, Kaenx.Creator.Share",
+                            "IsExpanded": false,
+                            "Name": "",
+                            "ParameterRef": 56,
+                            "HasHelptext": false,
+                            "HelptextId": 0,
+                            "UseIcon": false,
+                            "IconId": -1,
+                            "Cell": null,
+                            "Items": null,
+                            "HelpText": null
+                          },
+                          {
                             "$type": "Kaenx.Creator.Models.Dynamic.DynComObject, Kaenx.Creator.Share",
                             "IsExpanded": false,
                             "Name": "",
@@ -17590,9 +17655,9 @@
     "DefaultLanguage": "de-DE",
     "DefaultLanguageIndex": 0,
     "Name": "yeelight-yldl01yl",
-    "ReplacesVersions": "1",
+    "ReplacesVersions": "1 2",
     "Script": "",
-    "NameText": "V 0.1 yeelight-yldl01yl",
+    "NameText": "V 0.2 yeelight-yldl01yl",
     "Text": [
       {
         "$type": "Kaenx.Creator.Models.Translation, Kaenx.Creator.Share",
@@ -17605,7 +17670,7 @@
         "Preview": "yeelight-yldl01yl"
       }
     ],
-    "Number": 1,
+    "Number": 2,
     "AddressTableMaxCount": 65535,
     "AddressTableOffset": 0,
     "AddressMemoryId": -1,
