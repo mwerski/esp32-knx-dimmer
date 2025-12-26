@@ -328,6 +328,11 @@ static inline void applyFadeSpeed(KnxLed& L, uint8_t ch) {
 		case 5: up = ParamAPP_CH5_FadeUpSpeed; down = ParamAPP_CH5_FadeDownSpeed; color = up; break;
 		default: return;
 	}
+	#ifdef DEBUGGING
+  Serial.print("FadeUp Speed: "); Serial.println(up);
+  Serial.print("FadeDown Speed: "); Serial.println(down);
+  Serial.print("FadeColor Speed: "); Serial.println(color);
+	#endif
 	L.configFadeSpeed(up, down, color);
 }
 
