@@ -256,6 +256,28 @@ static inline uint8_t chBrightnessDay(uint8_t ch) {
   }
 }
 
+static inline uint8_t chBrightnessMin(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint8_t)ParamAPP_CH1_BrightnessMin;
+    case 2: return (uint8_t)ParamAPP_CH2_BrightnessMin;
+    case 3: return (uint8_t)ParamAPP_CH3_BrightnessMin;
+    case 4: return (uint8_t)ParamAPP_CH4_BrightnessMin;
+    case 5: return (uint8_t)ParamAPP_CH5_BrightnessMin;
+    default: return 0;
+  }
+}
+
+static inline uint8_t chBrightnessMax(uint8_t ch) {
+  switch (ch) {
+    case 1: return (uint8_t)ParamAPP_CH1_BrightnessMax;
+    case 2: return (uint8_t)ParamAPP_CH2_BrightnessMax;
+    case 3: return (uint8_t)ParamAPP_CH3_BrightnessMax;
+    case 4: return (uint8_t)ParamAPP_CH4_BrightnessMax;
+    case 5: return (uint8_t)ParamAPP_CH5_BrightnessMax;
+    default: return 0;
+  }
+}
+
 static inline uint16_t chMinCT(uint8_t ch) {
   switch (ch) {
     case 1: return (uint16_t)ParamAPP_CH1_MinColorTemp;
@@ -320,6 +342,8 @@ static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8
   L.configDefaultBrightness(chBrightnessDay(ch));
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
+	L.configMinBrightness(chBrightnessMin(ch));
+	L.configMaxBrightness(chBrightnessMax(ch));
   L.initRgbcctLight(rPin, gPin, bPin, cwPin, wwPin, CCT_MODE);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -342,6 +366,8 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   L.configDefaultBrightness(chBrightnessDay(ch));
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
+	L.configMinBrightness(chBrightnessMin(ch));
+	L.configMaxBrightness(chBrightnessMax(ch));
   L.initRgbwLight(rPin, gPin, bPin, wPin, WHITE_LED_RGB_EQUIVALENT);
 	#ifdef DEBUGGING
 	Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -364,6 +390,8 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
 	L.configDefaultTemperature(ch);
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
+	L.configMinBrightness(chBrightnessMin(ch));
+	L.configMaxBrightness(chBrightnessMax(ch));
   L.initRgbLight(rPin, gPin, bPin);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -384,6 +412,8 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
   L.configDefaultBrightness(chBrightnessDay(ch));
+	L.configMinBrightness(chBrightnessMin(ch));
+	L.configMaxBrightness(chBrightnessMax(ch));
   L.initTunableWhiteLight(cwPin, wwPin, CCT_MODE);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -400,6 +430,8 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
 	L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
   L.configDefaultBrightness(chBrightnessDay(ch));
+	L.configMinBrightness(chBrightnessMin(ch));
+	L.configMaxBrightness(chBrightnessMax(ch));
   L.initDimmableLight(pwmPin);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
