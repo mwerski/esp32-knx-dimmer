@@ -24,9 +24,15 @@
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
+<<<<<<< Updated upstream
 #define MAIN_ApplicationVersion 0x02
 #define MAIN_OrderNumber "DOM-WLE-ACLE"
 #define MAIN_ParameterSize 86
+=======
+#define MAIN_ApplicationVersion 0x03
+#define MAIN_OrderNumber "YLDL01YL"
+#define MAIN_ParameterSize 106
+>>>>>>> Stashed changes
 #define MAIN_MaxKoNumber 201
 
 
