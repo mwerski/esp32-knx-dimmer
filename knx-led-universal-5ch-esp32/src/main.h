@@ -9,6 +9,25 @@
 #include <esp-knx-common.h>
 #include <esp-knx-webserver.h>
 #include <esp-knx-led.h>
+#include <dim_curve.h>
+
+#ifdef PRODUCT_YLDL01YL
+	#include "yldl01yl_curves.h"
+#endif
+
+// ----------------------------------------------------
+// Dimming curve types (see settings.h)
+// ----------------------------------------------------
+enum DimCurveType {
+	DIMCURVE_DEFAULT,
+	DIMCURVE_LINEAR,
+	DIMCURVE_GAMMA,
+	DIMCURVE_EXPONENTIAL,
+	DIMCURVE_DALI,
+	DIMCURVE_LED_LOW_END_BOOST,
+	DIMCURVE_LED_HYBRID,
+	DIMCURVE_LED_S_CURVE
+};
 
 #if defined(ESP32)
 	#include <WiFi.h>

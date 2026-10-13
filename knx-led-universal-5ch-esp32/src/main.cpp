@@ -30,16 +30,25 @@ void knxCallback(GroupObject &go) {
 			if (ParamAPP_CH1_Active) {
 				defaultBrightness = itsDay ? ParamAPP_CH1_BrightnessDay : ParamAPP_CH1_BrightnessNight;
 				Light1.configDefaultBrightness(defaultBrightness);
-			} else if (ParamAPP_CH2_Active) {
+			}
+			if (ParamAPP_CH2_Active) {
 				defaultBrightness = itsDay ? ParamAPP_CH2_BrightnessDay : ParamAPP_CH2_BrightnessNight;
 				Light2.configDefaultBrightness(defaultBrightness);
-			} else if (ParamAPP_CH3_Active) {
+				#ifdef PRODUCT_YLDL01YL
+				Light3.configDefaultBrightness(defaultBrightness);	// NightLight follows DownLight
+				#endif
+			}
+			#ifndef PRODUCT_YLDL01YL
+			if (ParamAPP_CH3_Active) {
 				defaultBrightness = itsDay ? ParamAPP_CH3_BrightnessDay : ParamAPP_CH3_BrightnessNight;
 				Light3.configDefaultBrightness(defaultBrightness);
-			} else if (ParamAPP_CH4_Active) {
+			}
+			#endif
+			if (ParamAPP_CH4_Active) {
 				defaultBrightness = itsDay ? ParamAPP_CH4_BrightnessDay : ParamAPP_CH4_BrightnessNight;
 				Light4.configDefaultBrightness(defaultBrightness);
-			} else if (ParamAPP_CH5_Active) {
+			}
+			if (ParamAPP_CH5_Active) {
 				defaultBrightness = itsDay ? ParamAPP_CH5_BrightnessDay : ParamAPP_CH5_BrightnessNight;
 				Light5.configDefaultBrightness(defaultBrightness);
 			}
@@ -47,14 +56,23 @@ void knxCallback(GroupObject &go) {
 		}
 
 		case APP_KoCH1_Schalten: { Light1.switchLight(go.value(DPT_Switch)); break; }
+		#ifdef PRODUCT_YLDL01YL
+		// NightLight (Light3) follows the DownLight (CH2), CH3 objects are ignored
+		case APP_KoCH2_Schalten: { Light2.switchLight(go.value(DPT_Switch)); Light3.switchLight(go.value(DPT_Switch)); break; }
+		#else
 		case APP_KoCH2_Schalten: { Light2.switchLight(go.value(DPT_Switch)); break; }
 		case APP_KoCH3_Schalten: { Light3.switchLight(go.value(DPT_Switch)); break; }
+		#endif
 		case APP_KoCH4_Schalten: { Light4.switchLight(go.value(DPT_Switch)); break; }
 		case APP_KoCH5_Schalten: { Light5.switchLight(go.value(DPT_Switch)); break; }
 
 		case APP_KoCH1_BrightnessAbsolute: { Light1.setBrightness(go.value(DPT_Percent_U8)); break; }
+		#ifdef PRODUCT_YLDL01YL
+		case APP_KoCH2_BrightnessAbsolute: { Light2.setBrightness(go.value(DPT_Percent_U8)); Light3.setBrightness(go.value(DPT_Percent_U8)); break; }
+		#else
 		case APP_KoCH2_BrightnessAbsolute: { Light2.setBrightness(go.value(DPT_Percent_U8)); break; }
 		case APP_KoCH3_BrightnessAbsolute: { Light3.setBrightness(go.value(DPT_Percent_U8)); break; }
+		#endif
 		case APP_KoCH4_BrightnessAbsolute: { Light4.setBrightness(go.value(DPT_Percent_U8)); break; }
 		case APP_KoCH5_BrightnessAbsolute: { Light5.setBrightness(go.value(DPT_Percent_U8)); break; }
 
@@ -68,14 +86,19 @@ void knxCallback(GroupObject &go) {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light2.setRelDimCmd(dimCmd);
+			#ifdef PRODUCT_YLDL01YL
+			Light3.setRelDimCmd(dimCmd);
+			#endif
 			break;
 		}
+		#ifndef PRODUCT_YLDL01YL
 		case APP_KoCH3_BrightnessRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
 			Light3.setRelDimCmd(dimCmd);
 			break;
 		}
+		#endif
 		case APP_KoCH4_BrightnessRelative: {
 			dpt3_t dimCmd;
 			dimCmd.fromDPT3(go.value(DPT_Control_Dimming));
@@ -109,6 +132,7 @@ void knxCallback(GroupObject &go) {
 			hsv_t hsv;
 			hsv.fromDPT232600(go.value(DPT_Colour_RGB));
 			Light1.setHsv(hsv);
+			break;
 		}
 		case APP_KoCH1_ColorRGB: {
 			rgb_t rgb;
@@ -185,11 +209,11 @@ void responseBrightnessCallback_L5(uint8_t value) {
 }
 
 void responseTemperatureCallback_L1(uint16_t value) {
-	if (ParamAPP_CH1_Active) KoAPP_CH1_StatusColortemp.value(value, DPT_Percent_U8);
+	if (ParamAPP_CH1_Active) KoAPP_CH1_StatusColortemp.value(value, DPT_Value_2_Ucount);
 }
 
 void responseTemperatureCallback_L2(uint16_t value) {
-	if (ParamAPP_CH2_Active) KoAPP_CH2_StatusColortemp.value(value, DPT_Percent_U8);
+	if (ParamAPP_CH2_Active) KoAPP_CH2_StatusColortemp.value(value, DPT_Value_2_Ucount);
 }
 
 void responseColorHsvCallback_L1(hsv_t value) {
@@ -336,19 +360,70 @@ static inline void applyFadeSpeed(KnxLed& L, uint8_t ch) {
 	L.configFadeSpeed(up, down, color);
 }
 
+static inline DimCurveType chDimCurve(uint8_t ch) {
+	switch (ch) {
+		case 1: return DIM_CURVE_CH1;
+		case 2: return DIM_CURVE_CH2;
+		case 3: return DIM_CURVE_CH3;
+		case 4: return DIM_CURVE_CH4;
+		case 5: return DIM_CURVE_CH5;
+		default: return DIMCURVE_DEFAULT;
+	}
+}
+
+static inline void applyDimCurve(KnxLed& L, uint8_t ch) {
+	#ifdef PRODUCT_YLDL01YL
+	// fixed curves: RGB UpLight (CH1) keeps default, DownLight (CH2) and NightLight (CH3) share the dimming range
+	switch (ch) {
+		case 2: L.configDimCurve(yldl01ylDownLightCurve, DimCurve::TABLE_SIZE); break;
+		case 3: L.configDimCurve(yldl01ylNightLightCurve, DimCurve::TABLE_SIZE); break;
+	}
+	#ifdef DEBUGGING
+	Serial.print("Dim Curve: "); Serial.println(ch == 2 ? "YLDL01YL DownLight" : ch == 3 ? "YLDL01YL NightLight" : "default");
+	#endif
+	#else
+	DimCurveType type = chDimCurve(ch);
+	#ifdef DEBUGGING
+	Serial.print("Dim Curve: "); Serial.println(type);
+	#endif
+	if (type == DIMCURVE_DEFAULT) return;
+	uint16_t curve[DimCurve::TABLE_SIZE];
+	switch (type) {
+		case DIMCURVE_LINEAR: DimCurve::linear(curve); break;
+		case DIMCURVE_GAMMA: DimCurve::gamma(curve, DIM_CURVE_GAMMA); break;
+		case DIMCURVE_EXPONENTIAL: DimCurve::exponential(curve, DIM_CURVE_EXP_K); break;
+		case DIMCURVE_DALI: DimCurve::daliLog(curve); break;
+		case DIMCURVE_LED_LOW_END_BOOST: DimCurve::ledLowEndBoost(curve, DIM_CURVE_GAMMA, DIM_CURVE_PWM_MIN); break;
+		case DIMCURVE_LED_HYBRID: DimCurve::ledHybrid(curve, DIM_CURVE_HYBRID_T, DIM_CURVE_HYBRID_GAMMA_LOW, DIM_CURVE_HYBRID_GAMMA_HIGH); break;
+		case DIMCURVE_LED_S_CURVE: DimCurve::ledSCurve(curve, DIM_CURVE_GAMMA); break;
+		default: return;
+	}
+	// invalid curve -> esp-knx-led keeps its default lookupTable
+	if (DimCurve::validate(curve)) {
+		L.configDimCurve(curve, DimCurve::TABLE_SIZE);
+	}
+	#ifdef DEBUGGING
+	else {
+		Serial.println("Dim Curve invalid, using default");
+	}
+	#endif
+	#endif
+}
+
 static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t bPin, uint8_t cwPin, uint8_t wwPin) {
   printActive(ch, "RGBCCT", chActive(ch));
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
+	applyDimCurve(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
-  L.configDefaultBrightness(chBrightnessDay(ch));
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
+	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
   L.initRgbcctLight(rPin, gPin, bPin, cwPin, wwPin, CCT_MODE);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -356,6 +431,8 @@ static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
   Serial.print("Def CT: "); Serial.println(chDefCT(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+  Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
+  Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -365,14 +442,15 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
+	applyDimCurve(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
-  L.configDefaultBrightness(chBrightnessDay(ch));
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
+	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
   L.initRgbwLight(rPin, gPin, bPin, wPin, WHITE_LED_RGB_EQUIVALENT);
 	#ifdef DEBUGGING
 	Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -380,6 +458,8 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
   Serial.print("Def CT: "); Serial.println(chDefCT(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+  Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
+  Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -389,14 +469,15 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
-  L.configDefaultBrightness(chBrightnessDay(ch));
+	applyDimCurve(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
-	L.configDefaultTemperature(ch);
+	L.configDefaultTemperature(chDefCT(ch));
   hsv_t hsv = chDefHsv(ch);
   L.configDefaultHsv(hsv);
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
+	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
   L.initRgbLight(rPin, gPin, bPin);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -404,6 +485,8 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
   Serial.print("Def CT: "); Serial.println(chDefCT(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+  Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
+  Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -413,12 +496,13 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   if (chActive(ch) != PT_OnOff_Ein) return;
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
+	applyDimCurve(L, ch);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
-  L.configDefaultBrightness(chBrightnessDay(ch));
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
+	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
   L.initTunableWhiteLight(cwPin, wwPin, CCT_MODE);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -426,6 +510,8 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   Serial.print("Max CT: "); Serial.println(chMaxCT(ch));
   Serial.print("Def CT: "); Serial.println(chDefCT(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+  Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
+  Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
 	#endif
 }
 
@@ -434,15 +520,34 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
   if (chActive(ch) != PT_OnOff_Ein) return;
 	L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
-  L.configDefaultBrightness(chBrightnessDay(ch));
+	applyDimCurve(L, ch);
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
+	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
   L.initDimmableLight(pwmPin);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
+  Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
+  Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
 	#endif
 }
+
+#ifdef PRODUCT_YLDL01YL
+// NightLight follows the DownLight (CH2): same parameters, so both lights dim in sync,
+// but its own dimming curve (CH3), which covers the low end of the range
+static void setupNightLight(KnxLed& L, uint8_t pwmPin) {
+	printActive(3, "NightLight, follows CH2", chActive(2));
+	if (chActive(2) != PT_OnOff_Ein) return;
+	L.configDimSpeed(chDimSpeed(2));
+	applyFadeSpeed(L, 2);
+	applyDimCurve(L, 3);
+	L.configMinBrightness(chBrightnessMin(2));
+	L.configMaxBrightness(chBrightnessMax(2));
+	L.configDefaultBrightness(chBrightnessDay(2));
+	L.initDimmableLight(pwmPin);
+}
+#endif
 
 static void setupLightsFromEts() {
   #ifdef DEBUGGING
@@ -804,7 +909,7 @@ void setup() {
 	#ifdef ERASE_BTN
 	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
 	#endif
-	#if defined(PRODUCT) && (PRODUCT == YLDL01YL)
+	#ifdef PRODUCT_YLDL01YL
 	Serial.println("YLDL01YL mode, holding power GPIO high");
 	pinMode(22, OUTPUT);
 	digitalWrite(22,HIGH);	// should be changed later, so that power gets only applied if a light is active
@@ -835,14 +940,16 @@ void setup() {
 		HOSTNAME = (char *)knx.paramData(APP_Hostname);
 		// read channel setup and individual parameters from ETS config
 		setupLightsFromEts();
-		#if defined(PRODUCT) && (PRODUCT == YLDL01YL)
-		// static configuration of NightLight (l3)
-		setupDim(Light3, 3, 23);	// GPIO23, NightLight PWM
-		if (chActive(3) == PT_OnOff_Ein) {
-			Light3.registerStatusCallback(statusCallback_L3);
-			Light3.registerBrightnessCallback(responseBrightnessCallback_L3);
+		#ifdef PRODUCT_YLDL01YL
+		// static configuration of NightLight (l3), only in RGB_CCT mode, other modes already use Light3
+		// no status callbacks, the DownLight (CH2) reports the common brightness
+		if (ParamAPP_ChannelMode == PT_ChannelModes_RGB_CCT) {
+			setupNightLight(Light3, 23);	// GPIO23, NightLight PWM
 		}
 		#ifdef DEBUGGING
+		else {
+			Serial.println("NightLight not initialized, ChannelMode is not RGB_CCT");
+		}
 		sep();
 		#endif
 		#endif
@@ -865,6 +972,13 @@ void setup() {
 	#endif
 
 	connectWifi(HOSTNAME, WIFI_SSID, WIFI_PASS, 300);
+	// disable WiFi modem sleep: while sleeping, multicast (KNX IP routing) is only received
+	// at DTIM beacons or gets lost, which breaks ETS programming
+	#if defined(ESP32)
+	WiFi.setSleep(false);
+	#elif defined(ESP8266)
+	WiFi.setSleepMode(WIFI_NONE_SLEEP);
+	#endif
 
 	// Setup and start KNX stack
 	setKnxHostname(HOSTNAME);
@@ -920,7 +1034,11 @@ void loop() {
 
 		if (ParamAPP_CH1_Active) Light1.loop();
 		if (ParamAPP_CH2_Active) Light2.loop();
+		#ifdef PRODUCT_YLDL01YL
+		if (ParamAPP_CH2_Active) Light3.loop();	// NightLight follows DownLight
+		#else
 		if (ParamAPP_CH3_Active) Light3.loop();
+		#endif
 		if (ParamAPP_CH4_Active) Light4.loop();
 		if (ParamAPP_CH5_Active) Light5.loop();
 
