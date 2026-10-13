@@ -10,3 +10,6 @@
 [submodule "libraries/knx"]
 	path = libraries/knx
 	url = https://github.com/mwerski/knx.git
+[submodule "libraries/dimming-curves"]
+	path = libraries/dimming-curves
+	url = https://github.com/mwerski/dimming-curves.git
