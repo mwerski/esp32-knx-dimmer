@@ -46,4 +46,7 @@
 #define WIFI_PORTAL_AFTER_LOST_MS 600000UL   // start the portal if WiFi is lost for this time (10 min)
 #define WIFI_PORTAL_CHECK_MS 30000UL         // time to wait for a connection after the portal closed
 
+// diagnostic web page /gpiotest to switch single GPIOs (find the pin mapping of unknown hardware), ESP32 only
+#define GPIO_TEST_PAGE 1
+
 #define DEBUGGING true

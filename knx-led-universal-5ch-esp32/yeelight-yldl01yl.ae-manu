@@ -8718,8 +8718,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Power",
-            "Preview": "Power"
+            "Text": "LED-Versorgung schalten",
+            "Preview": "LED-Versorgung schalten"
           }
         ],
         "TranslationFunctionText": false,
@@ -8923,8 +8923,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "Status",
-            "Preview": "Status"
+            "Text": "LED-Versorgung Status",
+            "Preview": "LED-Versorgung Status"
           }
         ],
         "TranslationFunctionText": false,
@@ -17105,6 +17105,20 @@
                     "$type": "Kaenx.Creator.Models.Dynamic.DynComObject, Kaenx.Creator.Share",
                     "IsExpanded": false,
                     "Name": "",
+                    "ComObjectRef": 44,
+                    "Items": null
+                  },
+                  {
+                    "$type": "Kaenx.Creator.Models.Dynamic.DynComObject, Kaenx.Creator.Share",
+                    "IsExpanded": false,
+                    "Name": "",
+                    "ComObjectRef": 45,
+                    "Items": null
+                  },
+                  {
+                    "$type": "Kaenx.Creator.Models.Dynamic.DynComObject, Kaenx.Creator.Share",
+                    "IsExpanded": false,
+                    "Name": "",
                     "ComObjectRef": 2,
                     "Items": null
                   }
@@ -17941,9 +17955,9 @@
     "DefaultLanguage": "de-DE",
     "DefaultLanguageIndex": 0,
     "Name": "yeelight-yldl01yl",
-    "ReplacesVersions": "1 2 3 4 5",
+    "ReplacesVersions": "1 2 3 4 5 6",
     "Script": "",
-    "NameText": "V 0.6 yeelight-yldl01yl",
+    "NameText": "V 0.7 yeelight-yldl01yl",
     "Text": [
       {
         "$type": "Kaenx.Creator.Models.Translation, Kaenx.Creator.Share",
@@ -17956,7 +17970,7 @@
         "Preview": "yeelight-yldl01yl"
       }
     ],
-    "Number": 6,
+    "Number": 7,
     "AddressTableMaxCount": 65535,
     "AddressTableOffset": 0,
     "AddressMemoryId": -1,

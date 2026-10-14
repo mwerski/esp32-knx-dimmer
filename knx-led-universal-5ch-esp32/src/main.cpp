@@ -7,6 +7,21 @@ KnxLed Light4 = KnxLed();
 KnxLed Light5 = KnxLed();
 
 bool knxConfigOk = false;
+
+#ifdef PRODUCT_YLDL01YL
+// supply of the LED driver (uplight, downlight and nightlight), the ESP keeps running without it
+#define LED_POWER_GPIO 22
+static bool ledPowerOn = false;
+
+static void setLedPower(bool on, bool sendStatus) {
+	ledPowerOn = on;
+	digitalWrite(LED_POWER_GPIO, on ? HIGH : LOW);
+	if (sendStatus) KoAPP_GeneralStatusPower.value(on, DPT_State);
+	#ifdef DEBUGGING
+	Serial.print("LED power: "); Serial.println(on);
+	#endif
+}
+#endif
 static volatile bool wifiPortalRequested = false;	// set by web UI or KNX, handled in loop()
 static bool wifiPortalActive = false;
 bool initSent = false;
@@ -26,6 +41,10 @@ void knxCallback(GroupObject &go) {
 	#endif
 	switch (go.asap()) {
 		case APP_KoGeneralWifiPortal: { if (go.value(DPT_Start)) wifiPortalRequested = true; break; }
+
+		#ifdef PRODUCT_YLDL01YL
+		case APP_KoGeneralPower: { setLedPower(go.value(DPT_Switch), true); break; }
+		#endif
 
 		case APP_KoGeneralDayNight: {
 			bool itsDay;
@@ -322,10 +341,15 @@ static inline uint16_t chMaxCT(uint8_t ch) {
   }
 }
 
-// colour temperature follows brightness (only available for the DownLight)
+// colour temperature follows brightness (tunable white channels, only if the ETS application has the parameter)
 static inline bool chDim2Warm(uint8_t ch) {
   switch (ch) {
+    #ifdef ParamAPP_CH1_Dim2Warm
+    case 1: return ParamAPP_CH1_Dim2Warm;
+    #endif
+    #ifdef ParamAPP_CH2_Dim2Warm
     case 2: return ParamAPP_CH2_Dim2Warm;
+    #endif
     default: return false;
   }
 }
@@ -574,17 +598,39 @@ static void setupNightLight(KnxLed& L, uint8_t pwmPin) {
 }
 #endif
 
+// PWM GPIOs (index 0..4): fixed for known hardware, from ETS otherwise
+// the GPIO parameters are hidden in the ETS application of known hardware, hidden parameters
+// are not downloaded by the ETS (memory is filled with 0), so they must not be read there
+#ifdef PRODUCT_YLDL01YL
+static const uint8_t productPwmPins[5] = { 33, 26, 27, 21, 19 };	// uplight R/G/B, downlight CW/WW
+#endif
+
+static uint8_t pwmPin(uint8_t index) {
+	#ifdef PRODUCT_YLDL01YL
+	return index < 5 ? productPwmPins[index] : 0;
+	#else
+	// Param... sind uint32_t-Makros, KnxLed erwartet uint8_t
+	switch (index) {
+		case 0: return (uint8_t)ParamAPP_GPIO_PWM1;
+		case 1: return (uint8_t)ParamAPP_GPIO_PWM2;
+		case 2: return (uint8_t)ParamAPP_GPIO_PWM3;
+		case 3: return (uint8_t)ParamAPP_GPIO_PWM4;
+		case 4: return (uint8_t)ParamAPP_GPIO_PWM5;
+		default: return 0;
+	}
+	#endif
+}
+
 static void setupLightsFromEts() {
   #ifdef DEBUGGING
 	sep();
 	#endif
 
-  // GPIOs (Param... sind uint32_t-Makros, KnxLed erwartet uint8_t)
-  const uint8_t P1 = (uint8_t)ParamAPP_GPIO_PWM1;
-  const uint8_t P2 = (uint8_t)ParamAPP_GPIO_PWM2;
-  const uint8_t P3 = (uint8_t)ParamAPP_GPIO_PWM3;
-  const uint8_t P4 = (uint8_t)ParamAPP_GPIO_PWM4;
-  const uint8_t P5 = (uint8_t)ParamAPP_GPIO_PWM5;
+  const uint8_t P1 = pwmPin(0);
+  const uint8_t P2 = pwmPin(1);
+  const uint8_t P3 = pwmPin(2);
+  const uint8_t P4 = pwmPin(3);
+  const uint8_t P5 = pwmPin(4);
 
   switch (ParamAPP_ChannelMode) {
 
@@ -1117,6 +1163,86 @@ static void handleWifiPortal() {
 }
 #endif
 
+// GPIO test page: switch single GPIOs to find the pin mapping of unknown hardware
+#if GPIO_TEST_PAGE && defined(ESP32)
+#define GPIO_TEST_LEDC_CH 15	// lights allocate LEDC channels from 0
+// usable outputs, without flash (6-11), UART (1, 3) and input only pins (34-39)
+static const uint8_t gpioTestPins[] = { 0, 2, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33 };
+static int gpioTestPwmPin = -1;
+static String gpioTestState[40];
+
+// role of a pin in the current configuration
+static String gpioTestRole(uint8_t pin) {
+	String role;
+	if (knxConfigOk) {
+		for (uint8_t i = 0; i < 5; i++) {
+			if (pwmPin(i) == pin) role += "PWM" + String(i + 1) + " ";
+		}
+	}
+	#ifdef PRODUCT_YLDL01YL
+	if (pin == 22) role += "Power ";
+	if (pin == 23) role += "NightLight ";
+	#endif
+	return role;
+}
+
+static void gpioTestSet(uint8_t pin, uint8_t percent) {
+	// a pin switched to PWM before is switched off, only one test PWM channel
+	if (percent > 0 && percent < 100) {
+		if (gpioTestPwmPin >= 0 && gpioTestPwmPin != pin) {
+			pinMode(gpioTestPwmPin, OUTPUT);
+			digitalWrite(gpioTestPwmPin, LOW);
+			gpioTestState[gpioTestPwmPin] = "LOW";
+		}
+		ledcSetup(GPIO_TEST_LEDC_CH, 1000, 10);
+		ledcAttachPin(pin, GPIO_TEST_LEDC_CH);
+		ledcWrite(GPIO_TEST_LEDC_CH, (uint32_t)percent * 1023 / 100);
+		gpioTestPwmPin = pin;
+		gpioTestState[pin] = "PWM " + String(percent) + "%";
+	} else {
+		// pinMode() detaches the pin from its LEDC channel, the light can not drive it until restart
+		pinMode(pin, OUTPUT);
+		digitalWrite(pin, percent >= 100 ? HIGH : LOW);
+		if (gpioTestPwmPin == pin) gpioTestPwmPin = -1;
+		gpioTestState[pin] = percent >= 100 ? "HIGH" : "LOW";
+	}
+}
+
+static void handleGpioTest() {
+	if (!knxWebServ.checkAuth()) return;
+	WebServer* server = knxWebServ.getServer();
+	if (server->hasArg("pin") && server->hasArg("val")) {
+		int pin = server->arg("pin").toInt();
+		int val = constrain(server->arg("val").toInt(), 0, 100);
+		for (uint8_t p : gpioTestPins) {
+			if (p == pin) { gpioTestSet(p, val); break; }
+		}
+		// back to the plain page, so a reload does not repeat the action
+		server->sendHeader("Location", "/gpiotest", true);
+		server->send(302, "text/plain", "");
+		return;
+	}
+	String msg = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">";
+	msg += "<title>" + String(HOSTNAME) + " GPIO test</title><style>";
+	msg += "body{font-family:Helvetica;color:#444;text-align:center}table{margin:auto;border-collapse:collapse}";
+	msg += "td,th{padding:4px 8px;border-bottom:1px solid #ddd}a.b{display:inline-block;background:#34495e;color:#fff;";
+	msg += "padding:6px 10px;margin:2px;border-radius:4px;text-decoration:none}.w{color:#a93226}</style></head><body>";
+	msg += "<h2>GPIO test</h2>";
+	msg += "<p class=\"w\">Overrides the light control of the pin until the next restart.<br>";
+	msg += "Only one pin can use PWM (5/25%) at a time.</p>";
+	msg += "<table><tr><th>GPIO</th><th>Role</th><th>State</th><th></th></tr>";
+	for (uint8_t p : gpioTestPins) {
+		String base = "<a class=\"b\" href=\"/gpiotest?pin=" + String(p) + "&val=";
+		msg += "<tr><td>" + String(p) + "</td><td>" + gpioTestRole(p) + "</td><td>" + gpioTestState[p] + "</td><td>";
+		msg += base + "0\">LOW</a>" + base + "5\">5%</a>" + base + "25\">25%</a>" + base + "100\">HIGH</a>";
+		msg += "</td></tr>";
+	}
+	msg += "</table><p><a class=\"b\" href=\"/restart\">Restart (normal operation)</a> <a class=\"b\" href=\"/\">Back</a></p>";
+	msg += "</body></html>";
+	server->send(200, "text/html", msg);
+}
+#endif
+
 // Heartbeat helper
 static inline void handleHeartbeat() {
 	uint32_t intervalSec = ParamAPP_Heartbeat;
@@ -1141,9 +1267,9 @@ void setup() {
 	pinMode(ERASE_BTN, INPUT_PULLUP); // LOW = pressed
 	#endif
 	#ifdef PRODUCT_YLDL01YL
-	Serial.println("YLDL01YL mode, holding power GPIO high");
-	pinMode(22, OUTPUT);
-	digitalWrite(22,HIGH);	// should be changed later, so that power gets only applied if a light is active
+	// LED power is on after start, can be switched via KNX (group object "LED-Versorgung schalten")
+	pinMode(LED_POWER_GPIO, OUTPUT);
+	setLedPower(true, false);	// KNX is not running yet, status is sent with the other initial states
 	#endif
 	
 	// set correct hardware type for flash compatibility check
@@ -1228,6 +1354,9 @@ void setup() {
 	#endif
 	knxWebServ.startOta();
 	knxWebServ.startWeb(WWW_USER, WWW_PASS);
+	#if GPIO_TEST_PAGE && defined(ESP32)
+	knxWebServ.getServer()->on("/gpiotest", handleGpioTest);
+	#endif
 
 	// Both status LEDs off after WIFI connect
 	#ifdef STAT_LED_GN
@@ -1271,6 +1400,9 @@ void loop() {
 			if (ParamAPP_CH3_Active) Light3.sendStatusUpdate();
 			if (ParamAPP_CH4_Active) Light4.sendStatusUpdate();
 			if (ParamAPP_CH5_Active) Light5.sendStatusUpdate();
+			#ifdef PRODUCT_YLDL01YL
+			KoAPP_GeneralStatusPower.value(ledPowerOn, DPT_State);
+			#endif
 			initSent = true;
 		}
 
