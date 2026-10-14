@@ -7,6 +7,8 @@ KnxLed Light4 = KnxLed();
 KnxLed Light5 = KnxLed();
 
 bool knxConfigOk = false;
+static volatile bool wifiPortalRequested = false;	// set by web UI or KNX, handled in loop()
+static bool wifiPortalActive = false;
 bool initSent = false;
 KnxWebserver knxWebServ = KnxWebserver();
 static uint32_t startMs = millis();
@@ -23,6 +25,8 @@ void knxCallback(GroupObject &go) {
 	Serial.println(go.asap());
 	#endif
 	switch (go.asap()) {
+		case APP_KoGeneralWifiPortal: { if (go.value(DPT_Start)) wifiPortalRequested = true; break; }
+
 		case APP_KoGeneralDayNight: {
 			bool itsDay;
 			(ParamAPP_DayNight) ? (itsDay = go.value(DPT_Switch)) : (itsDay = !go.value(DPT_Switch));
@@ -318,6 +322,14 @@ static inline uint16_t chMaxCT(uint8_t ch) {
   }
 }
 
+// colour temperature follows brightness (only available for the DownLight)
+static inline bool chDim2Warm(uint8_t ch) {
+  switch (ch) {
+    case 2: return ParamAPP_CH2_Dim2Warm;
+    default: return false;
+  }
+}
+
 static inline uint16_t chDefCT(uint8_t ch) {
   switch (ch) {
     case 1: return (uint16_t)ParamAPP_CH1_DefaultColorTemp;
@@ -416,6 +428,7 @@ static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
 	applyDimCurve(L, ch);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
@@ -433,6 +446,7 @@ static void setupRgbcct(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
   Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
   Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
+  Serial.print("PWM Frequency: "); Serial.println(ParamAPP_PWMFrequency);
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -443,6 +457,7 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
 	applyDimCurve(L, ch);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
@@ -460,6 +475,7 @@ static void setupRgbw(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
   Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
   Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
+  Serial.print("PWM Frequency: "); Serial.println(ParamAPP_PWMFrequency);
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -470,6 +486,7 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
 	applyDimCurve(L, ch);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
 	L.configDefaultTemperature(chDefCT(ch));
@@ -487,6 +504,7 @@ static void setupRgb(KnxLed& L, uint8_t ch, uint8_t rPin, uint8_t gPin, uint8_t 
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
   Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
   Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
+  Serial.print("PWM Frequency: "); Serial.println(ParamAPP_PWMFrequency);
 	Serial.print("Def HSV raw: "); Serial.println((uint32_t)hsv.toDPT232600());
 	#endif
 }
@@ -497,12 +515,14 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
 	applyDimCurve(L, ch);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
   L.configMinTemperature(chMinCT(ch));
   L.configMaxTemperature(chMaxCT(ch));
   L.configDefaultTemperature(chDefCT(ch));
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
 	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
+	L.configDim2Warm(chDim2Warm(ch));
   L.initTunableWhiteLight(cwPin, wwPin, CCT_MODE);
 	#ifdef DEBUGGING
   Serial.print("Dim Speed: "); Serial.println(chDimSpeed(ch));
@@ -512,6 +532,8 @@ static void setupCct(KnxLed& L, uint8_t ch, uint8_t cwPin, uint8_t wwPin) {
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
   Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
   Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
+  Serial.print("PWM Frequency: "); Serial.println(ParamAPP_PWMFrequency);
+  Serial.print("Dim to warm: "); Serial.println(chDim2Warm(ch));
 	#endif
 }
 
@@ -521,6 +543,7 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
 	L.configDimSpeed(chDimSpeed(ch));
 	applyFadeSpeed(L, ch);
 	applyDimCurve(L, ch);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
 	L.configMinBrightness(chBrightnessMin(ch));
 	L.configMaxBrightness(chBrightnessMax(ch));
 	L.configDefaultBrightness(chBrightnessDay(ch));	// after configMaxBrightness(), which overwrites the default
@@ -530,6 +553,7 @@ static void setupDim(KnxLed& L, uint8_t ch, uint8_t pwmPin) {
   Serial.print("Def Brightness: "); Serial.println(chBrightnessDay(ch));
   Serial.print("Min Brightness: "); Serial.println(chBrightnessMin(ch));
   Serial.print("Max Brightness: "); Serial.println(chBrightnessMax(ch));
+  Serial.print("PWM Frequency: "); Serial.println(ParamAPP_PWMFrequency);
 	#endif
 }
 
@@ -542,6 +566,7 @@ static void setupNightLight(KnxLed& L, uint8_t pwmPin) {
 	L.configDimSpeed(chDimSpeed(2));
 	applyFadeSpeed(L, 2);
 	applyDimCurve(L, 3);
+	L.configPwmFrequency(ParamAPP_PWMFrequency);
 	L.configMinBrightness(chBrightnessMin(2));
 	L.configMaxBrightness(chBrightnessMax(2));
 	L.configDefaultBrightness(chBrightnessDay(2));
@@ -619,6 +644,7 @@ static void setupLightsFromEts() {
       if (chActive(1) == PT_OnOff_Ein) {
         Light1.registerStatusCallback(statusCallback_L1);
         Light1.registerBrightnessCallback(responseBrightnessCallback_L1);
+        Light1.registerTemperatureCallback(responseTemperatureCallback_L1);
         Light1.registerColorHsvCallback(responseColorHsvCallback_L1);
         Light1.registerColorRgbCallback(responseColorRgbCallback_L1);
       }
@@ -826,6 +852,21 @@ static inline bool connectWifi(const char* hostname, const char* ssid, const cha
 	WiFi.mode(WIFI_STA);
 	WiFi.hostname(hostname);
 
+	#if defined(ESP32)
+	// default is WIFI_FAST_SCAN, which connects to the first AP found with matching SSID (lowest channel),
+	// not the strongest one. Scan all channels and connect to the AP with the best signal instead.
+	WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
+	WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
+	// WiFiManager / WiFi.begin() without arguments reuse the stored config, so patch it as well
+	wifi_config_t conf;
+	if (esp_wifi_get_config(WIFI_IF_STA, &conf) == ESP_OK) {
+		conf.sta.scan_method = WIFI_ALL_CHANNEL_SCAN;
+		conf.sta.sort_method = WIFI_CONNECT_AP_BY_SIGNAL;
+		conf.sta.bssid_set = false;
+		esp_wifi_set_config(WIFI_IF_STA, &conf);
+	}
+	#endif
+
 	#if USE_WIFIMANAGER
 	//WiFiManager wm;
 	wm.setConfigPortalTimeout(portalTimeoutSec); // Sekunden
@@ -886,6 +927,196 @@ void factoryReset() {
 	#endif
 }
 
+// Light state persistence (restore after restart / power loss)
+#if RESTORE_LIGHT_STATE && defined(ESP32)
+#include <Preferences.h>
+
+static KnxLed* const lights[] = { &Light1, &Light2, &Light3, &Light4, &Light5 };
+static const uint8_t lightCount = sizeof(lights) / sizeof(lights[0]);
+static knxLedState_t savedStates[lightCount];
+
+static void readLightStates(knxLedState_t* states) {
+	for (uint8_t i = 0; i < lightCount; i++) states[i] = lights[i]->getState();
+}
+
+static void restoreLightStates() {
+	Preferences prefs;
+	if (!prefs.begin("lightstate", true)) return;	// read only, namespace does not exist yet
+	if (prefs.getBytesLength("states") == sizeof(savedStates)) {
+		prefs.getBytes("states", savedStates, sizeof(savedStates));
+		for (uint8_t i = 0; i < lightCount; i++) lights[i]->restoreState(savedStates[i]);
+		#ifdef DEBUGGING
+		Serial.println("Light states restored");
+		#endif
+	}
+	prefs.end();
+	// what is restored now is the reference for saving, avoids an unnecessary write after startup
+	readLightStates(savedStates);
+}
+
+// save the light states, but only after they did not change for STATE_SAVE_DELAY_MS
+static void handleLightStatePersistence() {
+	static uint32_t lastCheckMs = 0;
+	static uint32_t changedMs = 0;
+	static knxLedState_t lastStates[lightCount];
+	uint32_t now = millis();
+	if ((uint32_t)(now - lastCheckMs) < 1000) return;
+	lastCheckMs = now;
+
+	knxLedState_t states[lightCount];
+	readLightStates(states);
+	if (memcmp(states, lastStates, sizeof(states)) != 0) {
+		memcpy(lastStates, states, sizeof(states));
+		changedMs = now;
+		return;
+	}
+	if (memcmp(states, savedStates, sizeof(states)) == 0) return;
+	if ((uint32_t)(now - changedMs) < STATE_SAVE_DELAY_MS) return;
+	// states are only needed for "last state", avoid flash writes otherwise
+	if (ParamAPP_PowerOnBehavior != PT_PowerOnBehavior_LastState) return;
+
+	Preferences prefs;
+	if (prefs.begin("lightstate", false)) {
+		prefs.putBytes("states", states, sizeof(states));
+		prefs.end();
+		memcpy(savedStates, states, sizeof(states));
+		#ifdef DEBUGGING
+		Serial.println("Light states saved");
+		#endif
+	}
+}
+#endif
+
+// switch on all active lights with their default (day) brightness
+static void switchOnActiveLights() {
+	if (ParamAPP_CH1_Active) Light1.switchLight(true);
+	if (ParamAPP_CH2_Active) Light2.switchLight(true);
+	#ifdef PRODUCT_YLDL01YL
+	if (ParamAPP_CH2_Active) Light3.switchLight(true);	// NightLight follows DownLight
+	#else
+	if (ParamAPP_CH3_Active) Light3.switchLight(true);
+	#endif
+	if (ParamAPP_CH4_Active) Light4.switchLight(true);
+	if (ParamAPP_CH5_Active) Light5.switchLight(true);
+}
+
+// behavior after power on / restart, ETS parameter
+static void applyPowerOnBehavior() {
+	#ifdef DEBUGGING
+	Serial.print("Power on behavior: "); Serial.println(ParamAPP_PowerOnBehavior);
+	#endif
+	switch (ParamAPP_PowerOnBehavior) {
+		case PT_PowerOnBehavior_LastState:
+			#if RESTORE_LIGHT_STATE && defined(ESP32)
+			restoreLightStates();
+			#endif
+			break;
+		case PT_PowerOnBehavior_On:
+			switchOnActiveLights();
+			break;
+		case PT_PowerOnBehavior_Off:
+		default:
+			break;	// lights stay off
+	}
+}
+
+// WiFi setup portal
+#if USE_WIFIMANAGER && defined(ESP32)
+static String wifiOldSsid;
+static String wifiOldPass;
+
+// web UI callback, the portal is started in loop() (the web UI has to release port 80 first)
+void requestWifiPortal() {
+	wifiPortalRequested = true;
+}
+
+// stored station credentials, also available if not connected
+static void readStoredWifi(String& ssid, String& pass) {
+	wifi_config_t conf;
+	if (esp_wifi_get_config(WIFI_IF_STA, &conf) != ESP_OK) return;
+	char buf[65];
+	memcpy(buf, conf.sta.ssid, 32); buf[32] = 0;
+	ssid = buf;
+	memcpy(buf, conf.sta.password, 64); buf[64] = 0;
+	pass = buf;
+}
+
+static void startWifiPortal() {
+	readStoredWifi(wifiOldSsid, wifiOldPass);	// to restore them if the new credentials do not work
+	knxWebServ.stopWeb();	// portal uses port 80
+	wm.setConfigPortalBlocking(false);
+	wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT_S);
+	wm.startConfigPortal(HOSTNAME, WM_PASS);
+	wifiPortalActive = true;
+	#ifdef DEBUGGING
+	Serial.println("WiFi portal started");
+	#endif
+}
+
+// start the portal on request or if WiFi is lost for a long time, restore old credentials if the new ones fail
+static void handleWifiPortal() {
+	static uint32_t wifiLostMs = 0;
+	static uint32_t portalStartMs = 0;
+	static uint32_t portalClosedMs = 0;
+	static bool checkPending = false;
+	uint32_t now = millis();
+
+	if (!wifiPortalActive && !checkPending) {
+		if (WiFi.status() == WL_CONNECTED) wifiLostMs = 0;
+		else if (wifiLostMs == 0) wifiLostMs = now;
+		bool lostTooLong = wifiLostMs != 0 && (uint32_t)(now - wifiLostMs) >= WIFI_PORTAL_AFTER_LOST_MS;
+		if (wifiPortalRequested || lostTooLong) {
+			wifiPortalRequested = false;
+			wifiLostMs = 0;
+			startWifiPortal();
+			portalStartMs = now;
+		}
+		return;
+	}
+	wifiPortalRequested = false;
+
+	if (wifiPortalActive) {
+		wm.process();
+		// own timeout as well, the WiFiManager timeout is not reliable in non blocking mode
+		if (wm.getConfigPortalActive() && (uint32_t)(now - portalStartMs) >= WIFI_PORTAL_TIMEOUT_S * 1000UL) {
+			wm.stopConfigPortal();
+		}
+		if (wm.getConfigPortalActive()) return;
+		// portal closed: new credentials saved and connected, or timeout
+		wifiPortalActive = false;
+		checkPending = true;
+		portalClosedMs = now;
+		#ifdef DEBUGGING
+		Serial.println("WiFi portal closed");
+		#endif
+	}
+
+	// portal closed, wait for a connection
+	if (WiFi.status() == WL_CONNECTED) {
+		checkPending = false;
+		if (WiFi.SSID() != wifiOldSsid) {
+			// new network: restart, so KNX/IP and all services start cleanly with the new connection
+			#ifdef DEBUGGING
+			Serial.println("Connected to new WiFi, restarting");
+			#endif
+			delay(500);
+			ESP.restart();
+		}
+		knxWebServ.resumeWeb();
+	} else if ((uint32_t)(now - portalClosedMs) >= WIFI_PORTAL_CHECK_MS) {
+		// no connection with the new credentials: restore the old ones
+		checkPending = false;
+		if (wifiOldSsid.length() > 0) {
+			#ifdef DEBUGGING
+			Serial.print("No WiFi connection, restoring credentials for "); Serial.println(wifiOldSsid);
+			#endif
+			WiFi.begin(wifiOldSsid.c_str(), wifiOldPass.c_str());
+		}
+		knxWebServ.resumeWeb();
+	}
+}
+#endif
+
 // Heartbeat helper
 static inline void handleHeartbeat() {
 	uint32_t intervalSec = ParamAPP_Heartbeat;
@@ -935,9 +1166,9 @@ void setup() {
 
 	// Setup device after device was configured by ETS
 	if (knxConfigOk) {
-		GroupObject::classCallback(knxCallback); // callbacks are now handled per class, not per instance
 		// read hostname from ETS config
 		HOSTNAME = (char *)knx.paramData(APP_Hostname);
+		GroupObject::classCallback(knxCallback); // callbacks are now handled per class, not per instance
 		// read channel setup and individual parameters from ETS config
 		setupLightsFromEts();
 		#ifdef PRODUCT_YLDL01YL
@@ -953,6 +1184,7 @@ void setup() {
 		sep();
 		#endif
 		#endif
+		applyPowerOnBehavior();
 
 		startUpDelay = ParamAPP_StartUpDelay * 1000;
 
@@ -991,6 +1223,9 @@ void setup() {
 	knxWebServ.registerGetKnxModeCallback(getKnxMode);
 	knxWebServ.registerSetKnxModeCallback(setKnxMode);
 	knxWebServ.registerRestartDeviceCallback(restartDeviceCallback);
+	#if USE_WIFIMANAGER && defined(ESP32)
+	knxWebServ.registerWifiPortalCallback(requestWifiPortal);
+	#endif
 	knxWebServ.startOta();
 	knxWebServ.startWeb(WWW_USER, WWW_PASS);
 
@@ -1010,13 +1245,20 @@ void loop() {
 	if (gpioLowForMs(ERASE_BTN, 5000)) factoryReset();
 	#endif
 
+	#if USE_WIFIMANAGER && defined(ESP32)
+	handleWifiPortal();
+	#endif
+
 	if (WiFi.status() == WL_CONNECTED) {
 		knxWebServ.loop();
-			if(getKnxActive()) {
-				knx.loop();
+		if(getKnxActive()) {
+			// the IP data link layer reads only one UDP packet per call and the UDP receive buffer
+			// is small, so process several packets per cycle to avoid lost telegrams (ETS download)
+			for (uint8_t i = 0; i < KNX_LOOPS_PER_CYCLE; i++) knx.loop();
 		}
 		// only run the application code if the device was configured with ETS
-		if (!knxConfigOk) return;
+		// and no ETS download is running (group object tables are rewritten, access would crash)
+		if (!knxConfigOk || !knx.configured()) return;
 
 		// startup delay
 		if ( (currentMillis - startMs) < startUpDelay) return;
@@ -1042,9 +1284,14 @@ void loop() {
 		if (ParamAPP_CH4_Active) Light4.loop();
 		if (ParamAPP_CH5_Active) Light5.loop();
 
+		#if RESTORE_LIGHT_STATE && defined(ESP32)
+		handleLightStatePersistence();
+		#endif
+
 	} else {
 		static unsigned int reconnectCounter = 0;
-		if(reconnectCounter > 1000) {
+		// no reconnect while the setup portal runs, it handles the station itself
+		if(reconnectCounter > 1000 && !wifiPortalActive) {
 			WiFi.reconnect();
 			reconnectCounter=0;
 		}

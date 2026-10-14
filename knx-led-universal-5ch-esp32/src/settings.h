@@ -2,6 +2,7 @@
 
 #define CPU_FREQ 160 // 160 should be sufficient, otherwise raise to 240
 #define MIN_CYCLE_TIME 5000 //micros
+#define KNX_LOOPS_PER_CYCLE 8 // knx.loop() calls per cycle, each call reads max. one UDP packet
 
 //#define ERASE_BTN 0 // GPIO to erase ESP flash
 
@@ -32,5 +33,17 @@
 #define DIM_CURVE_HYBRID_T 0.2f       // LED_HYBRID
 #define DIM_CURVE_HYBRID_GAMMA_LOW 3.0f
 #define DIM_CURVE_HYBRID_GAMMA_HIGH 2.2f
+
+// restore the light states (on/off, brightness, colour) after a restart or power loss (ESP32 only, stored in NVS)
+// states are saved only after they did not change for STATE_SAVE_DELAY_MS, so fading/dimming does not wear the flash
+#define RESTORE_LIGHT_STATE 1
+#define STATE_SAVE_DELAY_MS 5000
+
+// WiFi setup portal (WiFiManager), started via web UI, KNX object or automatically if WiFi is lost
+// the current connection stays active while the portal is running, old credentials are restored
+// if the new ones do not work
+#define WIFI_PORTAL_TIMEOUT_S 300            // portal closes after this time without new credentials
+#define WIFI_PORTAL_AFTER_LOST_MS 600000UL   // start the portal if WiFi is lost for this time (10 min)
+#define WIFI_PORTAL_CHECK_MS 30000UL         // time to wait for a connection after the portal closed
 
 #define DEBUGGING true

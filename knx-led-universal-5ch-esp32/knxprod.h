@@ -21,10 +21,13 @@
 #define PT_lightType_RGB 3
 #define PT_lightType_TUNEABLE 4
 #define PT_lightType_DIMMABLE 5
+#define PT_PowerOnBehavior_LastState 0
+#define PT_PowerOnBehavior_Off 1
+#define PT_PowerOnBehavior_On 2
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x00
-#define MAIN_ApplicationVersion 0x03
+#define MAIN_ApplicationVersion 0x06
 #define MAIN_OrderNumber "YLDL01YL"
 #define MAIN_ParameterSize 106
 #define MAIN_MaxKoNumber 201
@@ -241,6 +244,13 @@
 #define APP_CH5_PWMFrequency		0x0068
 // Offset: 104, Size: 16 Bit (2 Byte), Text: Kanal 5 PWM Frequenz
 #define ParamAPP_CH5_PWMFrequency ((uint32_t)((knx.paramWord(APP_CH5_PWMFrequency))))
+#define APP_CH2_Dim2Warm		0x0027
+// Offset: 39, BitOffset: 7, Size: 1 Bit, Text: DownLight Farbtemperatur folgt Helligkeit (Dim-to-Warm)
+#define ParamAPP_CH2_Dim2Warm knx.paramBit(APP_CH2_Dim2Warm, 7)
+#define APP_PowerOnBehavior		0x0028
+#define APP_PowerOnBehavior_Mask	0x0003
+// Offset: 40, BitOffset: 6, Size: 2 Bit, Text: Verhalten nach Spannungswiederkehr
+#define ParamAPP_PowerOnBehavior ((uint32_t)((knx.paramByte(APP_PowerOnBehavior)) & APP_PowerOnBehavior_Mask))
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)
@@ -364,11 +374,11 @@
 //!< Number: 180, Text: Kanal 5, Function: Schalten
 #define APP_KoCH5_Schalten 180
 #define KoAPP_CH5_Schalten knx.getGroupObject(APP_KoCH5_Schalten)
-//!< Number: 161, Text: Kanal 5, Function: Helligkeit (absolut)
-#define APP_KoCH5_BrightnessAbsolute 161
+//!< Number: 181, Text: Kanal 5, Function: Helligkeit (absolut)
+#define APP_KoCH5_BrightnessAbsolute 181
 #define KoAPP_CH5_BrightnessAbsolute knx.getGroupObject(APP_KoCH5_BrightnessAbsolute)
-//!< Number: 162, Text: Kanal 5, Function: Helligkeit (relativ)
-#define APP_KoCH5_BrightnessRelative 162
+//!< Number: 182, Text: Kanal 5, Function: Helligkeit (relativ)
+#define APP_KoCH5_BrightnessRelative 182
 #define KoAPP_CH5_BrightnessRelative knx.getGroupObject(APP_KoCH5_BrightnessRelative)
 //!< Number: 200, Text: Kanal 5 (Status), Function: Status
 #define APP_KoCH5_Status 200
@@ -376,4 +386,7 @@
 //!< Number: 201, Text: Kanal 5 (Status), Function: Helligkeit
 #define APP_KoCH5_StatusBrightness 201
 #define KoAPP_CH5_StatusBrightness knx.getGroupObject(APP_KoCH5_StatusBrightness)
+//!< Number: 5, Text: Zentral, Function: WLAN-Portal starten
+#define APP_KoGeneralWifiPortal 5
+#define KoAPP_GeneralWifiPortal knx.getGroupObject(APP_KoGeneralWifiPortal)
 
