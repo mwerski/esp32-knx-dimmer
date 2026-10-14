@@ -24,10 +24,12 @@
 #define PT_PowerOnBehavior_LastState 0
 #define PT_PowerOnBehavior_Off 1
 #define PT_PowerOnBehavior_On 2
+#define PT_DefaultColorMode_LastState 0
+#define PT_DefaultColorMode_Fixed 1
 //--------------------Allgemein---------------------------
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 0x01
-#define MAIN_ApplicationVersion 0x03
+#define MAIN_ApplicationVersion 0x04
 #define MAIN_OrderNumber "DOM-WLE-ACLE"
 #define MAIN_ParameterSize 96
 #define MAIN_MaxKoNumber 201
@@ -113,7 +115,7 @@
 // Offset: 54, Size: 16 Bit (2 Byte), Text: Kanal 1 Maximale Farbtemperatur
 #define ParamAPP_CH1_MaxColorTemp ((uint32_t)((knx.paramWord(APP_CH1_MaxColorTemp))))
 #define APP_CH1_DefaultColor		0x0038
-// Offset: 56, Size: 24 Bit (3 Byte), Text: Kanal 1 Einschaltfarbe
+// Offset: 56, Size: 24 Bit (3 Byte), Text: Kanal 1 Feste Einschaltfarbe
 #define ParamAPP_CH1_DefaultColor knx.paramData(APP_CH1_DefaultColor)
 #define APP_CH2_Active		0x0026
 // Offset: 38, BitOffset: 5, Size: 1 Bit, Text: Kanal 2 aktiv
@@ -239,6 +241,9 @@
 #define APP_CH1_Dim2Warm		0x0029
 // Offset: 41, BitOffset: 6, Size: 1 Bit, Text: Kanal 1 Farbtemperatur folgt Helligkeit (Dim-to-Warm)
 #define ParamAPP_CH1_Dim2Warm knx.paramBit(APP_CH1_Dim2Warm, 6)
+#define APP_CH1_DefaultColorMode		0x0029
+// Offset: 41, BitOffset: 7, Size: 1 Bit, Text: Kanal 1 Einschaltfarbe
+#define ParamAPP_CH1_DefaultColorMode knx.paramBit(APP_CH1_DefaultColorMode, 7)
 //!< Number: 1, Text: Zentral, Function: In Betrieb
 #define APP_KoHeartbeat 1
 #define KoAPP_Heartbeat knx.getGroupObject(APP_KoHeartbeat)

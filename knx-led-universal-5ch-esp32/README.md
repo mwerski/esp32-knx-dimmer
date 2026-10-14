@@ -35,6 +35,8 @@ Feste Hardware, die Pins kommen nicht aus der ETS:
   ETS-Parameter pro CCT-Kanal. Ein expliziter Farbtemperatur-Befehl beendet es bis zum nächsten Einschalten.
 - **Verhalten nach Spannungswiederkehr** (ETS): letzter Zustand, aus, oder ein mit Einschalthelligkeit.
   Der letzte Zustand wird im NVS gespeichert, erst wenn er sich 5 s nicht mehr geändert hat.
+- **Einschaltfarbe** (RGB-Kanal 1, ETS): letzter Zustand (Farbe bzw. Weißton) oder feste Farbe.
+  Ist zusätzlich eine feste Einschaltfarbtemperatur gesetzt, hat die feste Farbe Vorrang.
 - **Dimmkurven** für allgemeine Hardware über `settings.h` (`DIM_CURVE_CHx`, Bibliothek `dimming-curves`).
 - **PWM-Frequenz** über die ETS (gilt für alle Kanäle).
 

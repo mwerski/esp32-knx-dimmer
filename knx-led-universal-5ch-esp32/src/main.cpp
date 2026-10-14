@@ -362,17 +362,22 @@ static inline uint16_t chDefCT(uint8_t ch) {
   }
 }
 
-// Wichtig: DefaultColor ist 24 Bit / 3 Byte => paramData liefert Pointer.
-static inline uint32_t chDefColorRaw(uint8_t ch) {
-  switch (ch) {
-    case 1: return (uint32_t)knx.paramInt(APP_CH1_DefaultColor);
-    default: return 0;
-  }
-}
-
+// switch on colour (HSV), v == 0 means "last colour" for KnxLed::switchLight()
+// DefaultColor is 24 bit / 3 byte (h, s, v), so it must be read with paramData(), paramInt() reads 4 bytes
 static inline hsv_t chDefHsv(uint8_t ch) {
-  hsv_t hsv;
-  hsv.fromDPT232600(chDefColorRaw(ch));
+  hsv_t hsv = {0, 0, 0};
+  if (ch != 1) return hsv;
+  #ifdef ParamAPP_CH1_DefaultColorMode
+  if (ParamAPP_CH1_DefaultColorMode != PT_DefaultColorMode_Fixed) return hsv;	// last state
+  #endif
+  const uint8_t* color = knx.paramData(APP_CH1_DefaultColor);
+  hsv.h = color[0];
+  hsv.s = color[1];
+  hsv.v = color[2];
+  #ifdef ParamAPP_CH1_DefaultColorMode
+  // fixed colour: the brightness comes from the switch on brightness, v only has to be > 0
+  hsv.v = 255;
+  #endif
   return hsv;
 }
 
