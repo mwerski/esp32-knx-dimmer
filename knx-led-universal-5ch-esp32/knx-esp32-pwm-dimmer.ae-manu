@@ -3315,8 +3315,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3357,8 +3357,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3399,8 +3399,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3441,8 +3441,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3777,8 +3777,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3819,8 +3819,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3861,8 +3861,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -3903,8 +3903,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4197,8 +4197,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4239,8 +4239,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4281,8 +4281,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4449,8 +4449,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4491,8 +4491,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4533,8 +4533,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4701,8 +4701,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4827,8 +4827,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -4869,8 +4869,8 @@
               "CultureCode": "de-DE",
               "Text": "Deutsch"
             },
-            "Text": "s",
-            "Preview": "s"
+            "Text": "x0.1 s",
+            "Preview": "x0.1 s"
           }
         ],
         "TranslationText": false,
@@ -22338,9 +22338,9 @@
     "DefaultLanguage": "de-DE",
     "DefaultLanguageIndex": 0,
     "Name": "knx-esp32-pwm-dimmer",
-    "ReplacesVersions": "1 2 3",
+    "ReplacesVersions": "1 2 3 4",
     "Script": "",
-    "NameText": "V 0.4 knx-esp32-pwm-dimmer",
+    "NameText": "V 0.5 knx-esp32-pwm-dimmer",
     "Text": [
       {
         "$type": "Kaenx.Creator.Models.Translation, Kaenx.Creator.Share",
@@ -22353,7 +22353,7 @@
         "Preview": "knx-esp32-pwm-dimmer"
       }
     ],
-    "Number": 4,
+    "Number": 5,
     "AddressTableMaxCount": 65535,
     "AddressTableOffset": 0,
     "AddressMemoryId": -1,
