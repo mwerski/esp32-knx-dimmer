@@ -1248,6 +1248,27 @@ static void handleGpioTest() {
 }
 #endif
 
+// Confirm a new firmware after an OTA update
+// The bootloader of some devices has app rollback enabled, but the Arduino framework is built without
+// CONFIG_APP_ROLLBACK_ENABLE and never confirms a new app. The bootloader would then return to the
+// previous firmware on the next restart. Confirm it as soon as WiFi is connected, so a firmware that
+// can not connect is still rolled back.
+#if defined(ESP32)
+static void confirmFirmware() {
+	static bool done = false;
+	if (done || WiFi.status() != WL_CONNECTED) return;
+	done = true;
+	esp_ota_img_states_t state;
+	if (esp_ota_get_state_partition(esp_ota_get_running_partition(), &state) == ESP_OK
+			&& state == ESP_OTA_IMG_PENDING_VERIFY) {
+		esp_ota_mark_app_valid_cancel_rollback();
+		#ifdef DEBUGGING
+		Serial.println("New firmware confirmed (rollback cancelled)");
+		#endif
+	}
+}
+#endif
+
 // Heartbeat helper
 static inline void handleHeartbeat() {
 	uint32_t intervalSec = ParamAPP_Heartbeat;
@@ -1381,6 +1402,10 @@ void loop() {
 
 	#if USE_WIFIMANAGER && defined(ESP32)
 	handleWifiPortal();
+	#endif
+
+	#if defined(ESP32)
+	confirmFirmware();
 	#endif
 
 	if (WiFi.status() == WL_CONNECTED) {

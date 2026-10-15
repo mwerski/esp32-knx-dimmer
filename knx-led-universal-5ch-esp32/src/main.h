@@ -38,6 +38,7 @@ enum DimCurveType {
 	#include <WiFi.h>
 	#include <mDNS.h>
 	#include <nvs_flash.h>
+	#include <esp_ota_ops.h>
 #elif defined(ESP8266)
 	#include <ESP8266WiFi.h>
 	#include <ESP8266mDNS.h>
